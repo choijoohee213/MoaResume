@@ -16,7 +16,7 @@ jobs:
         run: clang-tidy **/*.cpp -- -std=c++17 > clang-tidy-report.txt || true
 
       - name: Run reviewdog
-        uses: reviewdog/action-reviewdog@v1
+        uses: reviewdog/action-setup@v1
         with:
           name: clang-tidy
           reporter: github-pr-review
