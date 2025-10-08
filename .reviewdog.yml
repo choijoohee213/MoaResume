@@ -1,11 +1,8 @@
 runner:
-  name: cppcheck
-  cmd: cppcheck --enable=warning,style,performance,portability --std=c++14 ./pkg
-  errorformat:
-    - "%f:%l:%c: %m"
-    - "%f:%l: %m"
-
-reporter:
-  name: github-pr-review
-  level: warning
-  filter_mode: diff_context
+  cppcheck:
+    cmd:
+      cppcheck --enable=warning,style,performance,portability --std=c++14 --template='{file}:{line}:{column}: { severity }: { message }' ./pkg 2>&1
+    errorformat:
+        - "%f:%l:%c: %m"
+          - "%f:%l: %m"
+    level: warning

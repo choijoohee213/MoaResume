@@ -3,8 +3,9 @@ name: Static Analysis (cppcheck + reviewdog)
 on:
   pull_request:
     branches: [ develop, main ]
+
 jobs:
-  clang-tidy-review:
+  cppcheck-review:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,16 +19,19 @@ jobs:
         with:
           reviewdog_version: latest
 
-      - name: Run reviewdog
+      - name: Run cppcheck with reviewdog
         run: |
-          cppcheck --enable=warning,style,performance,portability --std=c++14 ./pkg 2> cppcheck.log || true
-
-          reviewdog \
-            -name="cppcheck" \
-            -level="warning" \
-            -reporter="github-pr-review" \
-            -filter-mode="diff_context" \
-            -fail-on-error="false" \
-            < cppcheck.log
+          cppcheck \
+            --enable=warning,style,performance,portability \
+            --std=c++14 \
+            --template='{file}:{line}:{column}: {severity}: {message}' \
+            ./pkg 2>&1 | reviewdog \
+              -efm="%f:%l:%c: %m" \
+              -efm="%f:%l: %m" \
+              -name="cppcheck" \
+              -reporter="github-pr-review" \
+              -filter-mode="diff_context" \
+              -fail-on-error="false" \
+              -level="warning"
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
