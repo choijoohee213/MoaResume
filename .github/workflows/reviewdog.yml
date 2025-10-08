@@ -21,13 +21,17 @@ jobs:
       - name: Run clang-tidy
         run: |
           echo "Running clang-tidy..."
-          find . -name "*.cpp" | xargs clang-tidy -- -std=c++14 | tee clang_tidy.log
+          set -e
+          for file in $(find . -name "*.cpp"); do
+          clang-tidy "$file" -- -std=c++14 >> clang_tidy.log || true
+          done
 
       - name: Run reviewdog
         run: |
           reviewdog \
           -name "clang-tidy" \
           -efm="%f:%l:%c: warning: %m" \
+          -efm="%f:%l:%c: error: %m" \
           -level warning \
           -fail-on-error=false \
           -filter-mode=diff_context \
