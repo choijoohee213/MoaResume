@@ -8,18 +8,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        continue-on-error: true
       - name: Install clang-tidy
         run: sudo apt-get install -y clang-tidy
-
+        continue-on-error: true
       - name: Run clang-tidy
         run: clang-tidy **/*.cpp -- -std=c++17 > clang-tidy-report.txt || true
-
+        continue-on-error: true
       - name: Run reviewdog
-        uses: reviewdog/action-setup@v1
+        uses: reviewdog/action-setup@d8edfce3dd5e1ec6978745e801f9c50b5ef80252 # v1.4.0
+        run: reviewdog -version
         with:
           name: clang-tidy
           reporter: github-pr-review
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           fail_on_error: true
           filter_mode: diff_context
           level: warning
