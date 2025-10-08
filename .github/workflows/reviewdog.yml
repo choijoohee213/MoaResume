@@ -22,14 +22,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang-tidy
 
       - name: Configure CMake
-        run: cmake -S . -B build
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Run clang-tidy
         run: |
           echo "Running clang-tidy..."
           set -e
           for file in $(find . -name "*.cpp"); do
-          clang-tidy "$file" -p build/ >> clang_tidy.log || true
+          clang-tidy "$file" -p build/Release >> clang_tidy.log || true
           done
 
       - name: Run reviewdog
