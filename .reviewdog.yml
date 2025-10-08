@@ -6,3 +6,6 @@ runner:
     filter_mode: diff_context
     fail_on_error: false
     pattern: ".*\\.cpp$"
+    efm:
+      - "%f:%l:%c: warning: %m"
+      - "%f:%l:%c: error: %m"
