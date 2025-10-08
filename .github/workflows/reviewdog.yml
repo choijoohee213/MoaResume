@@ -1,0 +1,31 @@
+name: reviewdog-clang-tidy
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install clang-tidy
+        run: sudo apt-get install -y clang-tidy
+
+      - name: Run clang-tidy
+        run: clang-tidy $(find . -name '*.cpp') -- -std=c++17 > clang-tidy-report.txt || true
+
+      - name: Run reviewdog
+        uses: reviewdog/action-reviewdog@v2
+        with:
+          name: clang-tidy
+          reporter: github-pr-review
+          fail_on_error: false
+          filter_mode: diff_context
+          level: warning
+          path: .
+          
+          input_file: clang-tidy-report.txt
