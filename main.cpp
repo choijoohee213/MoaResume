@@ -6,6 +6,5 @@ int main(int argc, char *argv[]) {
     QPushButton button("Hello MoaResume!", nullptr);
     button.resize(200, 100);
     button.show();
-    int result;
     return QApplication::exec();
 }
