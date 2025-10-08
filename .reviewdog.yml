@@ -4,7 +4,8 @@ runner:
   errorformat:
     - "%f:%l:%c: %m"
     - "%f:%l: %m"
+
 reporter:
   name: github-pr-review
   level: warning
-  filter-mode: diff_context
+  filter_mode: diff_context
