@@ -1,0 +1,10 @@
+runner:
+  name: cppcheck
+  cmd: cppcheck --enable=warning,style,performance,portability --std=c++14 ./pkg
+  errorformat:
+    - "%f:%l:%c: %m"
+    - "%f:%l: %m"
+reporter:
+  name: github-pr-review
+  level: warning
+  filter-mode: diff_context
