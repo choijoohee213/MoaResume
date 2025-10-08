@@ -1,0 +1,8 @@
+runner:
+  clang_tidy:
+    name: "clang-tidy"
+    reporter: github-pr-review
+    level: warning
+    filter_mode: diff_context
+    fail_on_error: false
+    pattern: ".*\\.cpp$"
