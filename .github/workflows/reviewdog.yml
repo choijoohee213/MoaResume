@@ -49,5 +49,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅cppcheck 정적 분석이 완료되었습니다!'
+              body: '✅ cppcheck 정적 분석이 완료되었습니다!'
             });
