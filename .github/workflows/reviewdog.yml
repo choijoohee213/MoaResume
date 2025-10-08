@@ -21,18 +21,22 @@ jobs:
 
       - name: Run cppcheck with reviewdog
         run: |
-          cppcheck \
-            --enable=warning,style,performance,portability \
-            --std=c++14 \
-            --template='{file}:{line}:{column}: {severity}: {message}' \
-            --suppress=missingIncludeSystem \
-            . 2>&1 | reviewdog \
-              -efm="%f:%l:%c: %m" \
-              -efm="%f:%l: %m" \
-              -name="cppcheck" \
-              -reporter="github-pr-review" \
-              -filter-mode="diff_context" \
-              -fail-on-error="false" \
-              -level="warning"
+          find . -type f \( -name "*.cpp" -o -name "*.h" \) \
+            -not -path "*/build/*" \
+            -not -path "*/third_party/*" \
+            -not -path "*/.git/*" \
+            | xargs cppcheck \
+              --enable=warning,style,performance,portability \
+              --std=c++14 \
+              --template='{file}:{line}:{column}: {severity}: {message}' \
+              --suppress=missingIncludeSystem \
+              2>&1 | reviewdog \
+                -efm="%f:%l:%c: %m" \
+                -efm="%f:%l: %m" \
+                -name="cppcheck" \
+                -reporter="github-pr-review" \
+                -filter-mode="diff_context" \
+                -fail-on-error="false" \
+                -level="warning"
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
