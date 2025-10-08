@@ -1,4 +1,4 @@
-name: Static Analysis (clang-tidy + reviewdog)
+name: Static Analysis (cppcheck + reviewdog)
 
 on:
   pull_request:
@@ -10,39 +10,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Qt (optional, if needed for headers)
-        run: sudo apt-get install -y qt6-base-dev
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
 
       - name: Install reviewdog
         uses: reviewdog/action-setup@v1.3.0
         with:
           reviewdog_version: latest
 
-      - name: Install clang-tidy
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy
-
-      - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-      - name: Run clang-tidy
+      - name: Run cppcheck
         run: |
-          echo "Running clang-tidy..."
-          set -e
-          for file in $(find . -name "*.cpp"); do
-          clang-tidy "$file" -p build/Release >> clang_tidy.log || true
-          done
+          echo "Running cppcheck..."
+          cppcheck --enable=warning,style,performance,portability --std=c++14 ./pkg 2> cppcheck.log || true
+
 
       - name: Run reviewdog
         run: |
           reviewdog \
-          -name "clang-tidy" \
-          -efm="%f:%l:%c: warning: %m" \
-          -efm="%f:%l:%c: error: %m" \
+          -name "cppcheck" \
           -level warning \
           -fail-on-error=false \
           -filter-mode=diff_context \
           -diff="git diff FETCH_HEAD" \
           -reporter=github-pr-review \
-          < clang_tidy.log
+          < cppcheck.log
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
