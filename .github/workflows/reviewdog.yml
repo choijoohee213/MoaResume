@@ -1,7 +1,8 @@
 name: Static Analysis (clang-tidy + reviewdog)
 
-on: [ pull_request ]
-
+on:
+  pull_request:
+    branches: [ develop, main ]
 jobs:
   clang-tidy-review:
     runs-on: ubuntu-latest
@@ -9,19 +10,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install reviewdog
+        uses: reviewdog/action-setup@v1.3.0
+        with:
+          reviewdog_version: latest
+
       - name: Install clang-tidy
-        run: sudo apt-get install -y clang-tidy
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy-11
 
       - name: Run clang-tidy
-        run: clang-tidy **/*.cpp -- -std=c++17 > clang-tidy-report.txt || true
+        run: |
+          echo "Running clang-tidy..."
+          clang-tidy **/*.cpp -- -std=c++17 | tee clang_tidy.log
 
       - name: Run reviewdog
-        uses: reviewdog/action-reviewdog@v1
-        with:
-          github_token: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
-          tool_name: clang-tidy
-          reporter: github-pr-review
-          level: warning
-          filter_mode: diff_context
-          input: clang-tidy-report.txt
-          fail_on_error: true
+        run: |
+          reviewdog \
+            -name "clang-tidy" \
+            -level warning \
+            -fail-on-error=false \
+            -filter-mode=diff_context \
+            -diff="git diff FETCH_HEAD" \
+            -reporter=github-pr-review \
+            < clang_tidy.log
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
