@@ -25,7 +25,8 @@ jobs:
             --enable=warning,style,performance,portability \
             --std=c++14 \
             --template='{file}:{line}:{column}: {severity}: {message}' \
-            ./pkg 2>&1 | reviewdog \
+            --suppress=missingIncludeSystem \
+            . 2>&1 | reviewdog \
               -efm="%f:%l:%c: %m" \
               -efm="%f:%l: %m" \
               -name="cppcheck" \
