@@ -21,77 +21,29 @@ jobs:
 
       - name: Run cppcheck with reviewdog
         run: |
-          # .cpp와 .h 파일 찾기
-          find . -type f \( -name "*.cpp" -o -name "*.h" \) \
-            -not -path "*/build/*" \
-            -not -path "*/.git/*" \
-            > files.txt
-          
-          # cppcheck 실행
-          if [ -s files.txt ]; then
-            cppcheck \
-              --enable=warning,style,performance,portability \
-              --std=c++14 \
-              --template='{file}:{line}:{column}: {severity}: {message}' \
-              --suppress=missingIncludeSystem \
-              --file-list=files.txt \
-              2> cppcheck.log || true
-          else
-            touch cppcheck.log
-          fi
-          
-          # 이슈 개수 카운트
-          ERROR_COUNT=$(grep -c "error:" cppcheck.log 2>/dev/null || echo "0")
-          WARNING_COUNT=$(grep -c "warning:" cppcheck.log 2>/dev/null || echo "0")
-          STYLE_COUNT=$(grep -c "style:" cppcheck.log 2>/dev/null || echo "0")
-          
-          # GITHUB_OUTPUT에 저장
-          echo "errors=${ERROR_COUNT}" >> "$GITHUB_OUTPUT"
-          echo "warnings=${WARNING_COUNT}" >> "$GITHUB_OUTPUT"
-          echo "styles=${STYLE_COUNT}" >> "$GITHUB_OUTPUT"
-          
-          # reviewdog로 PR에 코멘트
-          if [ -s cppcheck.log ]; then
-            cat cppcheck.log | reviewdog \
+          find . -name "*.cpp" -o -name "*.h" | xargs cppcheck \
+            --enable=warning,style,performance,portability \
+            --std=c++14 \
+            --template='{file}:{line}:{column}: {severity}: {message}' \
+            --suppress=missingIncludeSystem \
+            2>&1 | reviewdog \
               -efm="%f:%l:%c: %m" \
               -name="cppcheck" \
               -reporter="github-pr-review" \
-              -filter-mode="diff_context" \
-              -fail-on-error="false" \
-              -level="warning"
-          fi
+              -level="warning" \
+              -fail-on-error="false"
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_API_TOKEN }}
 
-      - name: Post summary comment
+      - name: Comment
         if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const errors = parseInt('${{ steps.cppcheck.outputs.errors }}') || 0;
-            const warnings = parseInt('${{ steps.cppcheck.outputs.warnings }}') || 0;
-            const styles = parseInt('${{ steps.cppcheck.outputs.styles }}') || 0;
-            
-            const totalIssues = errors + warnings + styles;
-            
-            let body = '## 🔍 cppcheck 정적 분석 결과\n\n';
-            
-            if (totalIssues === 0) {
-              body += '✅ **축하합니다!** 모든 검사를 통과했습니다.\n\n';
-              body += '발견된 이슈: **0개**';
-            } else {
-              body += '⚠️ 일부 이슈가 발견되었습니다:\n\n';
-              body += `- 🔴 Errors: **${errors}**\n`;
-              body += `- 🟡 Warnings: **${warnings}**\n`;
-              body += `- 🔵 Style issues: **${styles}**\n\n`;
-              body += `**총 ${totalIssues}개** 이슈\n\n`;
-              body += '자세한 내용은 위의 인라인 코멘트를 확인해주세요.';
-            }
-            
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
+              body: '✅cppcheck 정적 분석이 완료되었습니다!'
             });
