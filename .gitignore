@@ -1,0 +1,95 @@
+# ----------------------------
+# OS / macOS
+# ----------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# ----------------------------
+# CLion / JetBrains
+# ----------------------------
+.idea/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+*.iml
+
+# ----------------------------
+# Build Artifacts
+# ----------------------------
+build/
+out/
+bin/
+lib/
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.dylib
+*.exe
+*.app
+*.log
+
+# ----------------------------
+# CMake
+# ----------------------------
+CMakeScripts/
+Testing/
+CTestTestfile.cmake
+install_manifest.txt
+compile_commands.json
+Makefile
+cmake_install.cmake
+
+# ----------------------------
+# Qt Specific
+# ----------------------------
+moc_*
+qrc_*
+ui_*
+*.pro.user
+*.qmlc
+*.jsc
+*.qmake.stash
+*.qmake.cache
+
+# ----------------------------
+# SQLite Database / Local Data
+# ----------------------------
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# ----------------------------
+# JSON or local save files (if used for local storage)
+# ----------------------------
+*.json.backup
+*.local.json
+
+# ----------------------------
+# Go server (later)
+# ----------------------------
+/server/bin/
+/server/tmp/
+/server/logs/
+/server/go.sum
+/server/go.work
+/server/go.work.sum
+
+# ----------------------------
+# Logs / temp
+# ----------------------------
+*.tmp
+*.bak
+*.swp
+*.swo
+*.log
+*.cache
+*.pid
+
