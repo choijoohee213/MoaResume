@@ -23,13 +23,13 @@ jobs:
 
       - name: Configure CMake
         run: cmake -S . -B build
-        
+
       - name: Run clang-tidy
         run: |
           echo "Running clang-tidy..."
           set -e
           for file in $(find . -name "*.cpp"); do
-          clang-tidy "$file" -- -std=c++14 >> clang_tidy.log || true
+          clang-tidy "$file" -p build/ >> clang_tidy.log || true
           done
 
       - name: Run reviewdog
