@@ -21,7 +21,7 @@ jobs:
       - name: Run clang-tidy
         run: |
           echo "Running clang-tidy..."
-          clang-tidy **/*.cpp -- -std=c++14 | tee clang_tidy.log
+          find . -name "*.cpp" | xargs clang-tidy -- -std=c++14 | tee clang_tidy.log
 
       - name: Run reviewdog
         run: |
