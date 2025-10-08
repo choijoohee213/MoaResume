@@ -1,13 +1,10 @@
-name: reviewdog-clang-tidy
+name: Static Analysis (clang-tidy + reviewdog)
 
-on:
-  pull_request:
-    branches: [ develop ]
+on: [ pull_request ]
 
 jobs:
-  clang-tidy:
+  clang-tidy-review:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,16 +13,14 @@ jobs:
         run: sudo apt-get install -y clang-tidy
 
       - name: Run clang-tidy
-        run: clang-tidy $(find . -name '*.cpp') -- -std=c++17 > clang-tidy-report.txt || true
+        run: clang-tidy **/*.cpp -- -std=c++17 > clang-tidy-report.txt || true
 
       - name: Run reviewdog
-        uses: reviewdog/action-reviewdog@v2
+        uses: reviewdog/action-reviewdog@v1
         with:
           name: clang-tidy
           reporter: github-pr-review
-          fail_on_error: false
+          fail_on_error: true
           filter_mode: diff_context
           level: warning
-          path: .
-          
-          input_file: clang-tidy-report.txt
+          input: clang-tidy-report.txt
