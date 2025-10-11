@@ -14,7 +14,12 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(MoaResume main.cpp)
+add_executable(MoaResume
+        main.cpp
+        ui/MainWindow.cpp
+        pkg/home/widget/HomeWidget.cpp
+)
+
 target_link_libraries(MoaResume
         Qt::Core
         Qt::Gui
