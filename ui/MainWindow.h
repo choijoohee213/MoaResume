@@ -10,7 +10,8 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow() = default;
 
 private slots:
@@ -18,11 +19,12 @@ private slots:
 
 private:
     void setupUi();
+
     void connectSignals();
 
-    QStackedWidget* stackedWidget;
+    QStackedWidget *mStackedWidget{};
 
-    HomeWidget* homeWidget;
+    HomeWidget *mHomeWidget{};
 };
 
 #endif
