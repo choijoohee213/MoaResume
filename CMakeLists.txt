@@ -18,8 +18,10 @@ add_executable(MoaResume
         main.cpp
         ui/MainWindow.cpp ui/MainWindow.h
         pkg/home/widget/HomeWidget.cpp pkg/home/widget/HomeWidget.h
-        pkg/workspace/widget/WorkSpaceWidget.cpp pkg/workspace/widget/WorkSpaceWidget.h
+        pkg/workspace/widget/WorkspaceWidget.cpp pkg/workspace/widget/WorkspaceWidget.h
+        pkg/workspace/widget/WorkspaceSidebar.cpp pkg/workspace/widget/WorkspaceSidebar.h
         pkg/home/home.qrc
+        pkg/workspace/workspace.qrc
 )
 
 target_link_libraries(MoaResume
