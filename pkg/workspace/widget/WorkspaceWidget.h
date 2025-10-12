@@ -10,12 +10,6 @@ public:
     explicit WorkspaceWidget(QWidget *parent = nullptr);
 
     ~WorkspaceWidget() = default;
-
-private:
-    void setupUi();
-    void connectSignals();
-
-    QSt
 };
 
 
