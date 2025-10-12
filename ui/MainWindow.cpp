@@ -29,5 +29,5 @@ void MainWindow::connectSignals() {
 }
 
 void MainWindow::showWorkspace() {
-    mWorkspaceWidget->show();
+    mStackedWidget->setCurrentWidget(mWorkspaceWidget);
 }
