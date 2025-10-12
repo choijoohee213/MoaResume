@@ -17,8 +17,6 @@ public:
     ~MainWindow() = default;
 
 private slots:
-    void showHome();
-
     void showWorkspace();
 
 private:
