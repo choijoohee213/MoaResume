@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "../pkg/home/widget/HomeWidget.h"
 #include "../common/Constants.h"
 #include "UIConstants.h"
 
@@ -19,7 +18,16 @@ void MainWindow::setupUi() {
 
     mHomeWidget = new HomeWidget(this);
     mStackedWidget->addWidget(mHomeWidget);
+
+    mWorkspaceWidget = new WorkspaceWidget(this);
+    mStackedWidget->addWidget(mWorkspaceWidget);
 }
 
 void MainWindow::connectSignals() {
+    connect(mHomeWidget, &HomeWidget::navigateToWorkspace,
+            this, &MainWindow::showWorkspace);
+}
+
+void MainWindow::showWorkspace() {
+    mWorkspaceWidget->show();
 }

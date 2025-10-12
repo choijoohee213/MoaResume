@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "../pkg/home/widget/HomeWidget.h"
+#include "../pkg/workspace/widget/WorkspaceWidget.h"
 #include <QMainWindow>
 #include <QStackedWidget>
 
@@ -17,14 +19,18 @@ public:
 private slots:
     void showHome();
 
+    void showWorkspace();
+
 private:
     void setupUi();
 
     void connectSignals();
 
-    QStackedWidget *mStackedWidget{};
+    QStackedWidget *mStackedWidget;
 
-    HomeWidget *mHomeWidget{};
+    HomeWidget *mHomeWidget;
+
+    WorkspaceWidget *mWorkspaceWidget;
 };
 
 #endif
