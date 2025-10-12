@@ -16,9 +16,9 @@ find_package(Qt6 COMPONENTS
 
 add_executable(MoaResume
         main.cpp
-        ui/MainWindow.cpp
-        pkg/home/widget/HomeWidget.cpp
-        pkg/workspace/widget/WorkSpaceWidget.cpp
+        ui/MainWindow.cpp ui/MainWindow.h
+        pkg/home/widget/HomeWidget.cpp pkg/home/widget/HomeWidget.h
+        pkg/workspace/widget/WorkSpaceWidget.cpp pkg/workspace/widget/WorkSpaceWidget.h
         pkg/home/home.qrc
 )
 
