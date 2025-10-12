@@ -1,0 +1,28 @@
+/* Home Widget Styles */
+
+/* Start Button */
+QPushButton#startButton {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 200px;
+    min-height: 50px;
+}
+
+QPushButton#startButton:hover {
+    background-color: #357ABD;
+}
+
+QPushButton#startButton:pressed {
+    background-color: #2868A8;
+}
+
+/* Title Label */
+QLabel#titleLabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+}

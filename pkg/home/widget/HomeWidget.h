@@ -26,9 +26,15 @@ private:
 
     void connectSignals();
 
-    QLabel *titleLabel;
-    QPushButton *startButton;
-    QVBoxLayout *mainLayout;
+    void loadStyles();
+
+    void setupTitleLabel();
+
+    void setupStartBtn();
+
+    QLabel *mTitleLabel;
+    QPushButton *mStartButton;
+    QVBoxLayout *mMainLayout;
 };
 
 #endif

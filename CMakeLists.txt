@@ -19,6 +19,7 @@ add_executable(MoaResume
         ui/MainWindow.cpp
         pkg/home/widget/HomeWidget.cpp
         pkg/workspace/widget/WorkSpaceWidget.cpp
+        pkg/home/home.qrc
 )
 
 target_link_libraries(MoaResume
