@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/workspace">
+        <file>styles/workspace.qss</file>
+    </qresource>
+</RCC>
