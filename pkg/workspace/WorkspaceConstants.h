@@ -11,16 +11,16 @@ namespace WorkspaceConstants {
     constexpr int SIDEBAR_MAX_WIDTH = 250;
 
     // Menu button names
-    constexpr const char *MENU_BTN_APPLICATION = "menuBtnApplication";
+    constexpr const char *MENU_BTN_APPLICATION_LIST = "menuBtnApplicationList";
     constexpr const char *MENU_BTN_RESUME = "menuBtnResume";
 
     // Menu button texts
-    constexpr const char *MENU_TEXT_APPLICATION = "지원목록";
+    constexpr const char *MENU_TEXT_APPLICATION_LIST = "지원서 목록";
     constexpr const char *MENU_TEXT_RESUME = "이력서 관리";
 
     // Menu indices (for QStackedWidget)
     enum class MENU_INDEX {
-        APPLICATION = 0,
+        APPLICATION_LIST = 0,
         RESUME
     };
 }

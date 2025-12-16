@@ -5,7 +5,7 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include "WorkspaceSidebar.h"
-#include "../../application/widget/ApplicationWidget.h"
+#include "../../applicationList/widget/ApplicationListWidget.h"
 #include "../../resume/widget/ResumeWidget.h"
 
 class WorkspaceWidget : public QWidget {
@@ -29,7 +29,7 @@ private:
     WorkspaceSidebar *mSidebar;
     QStackedWidget *mStackedWidget;
 
-    ApplicationWidget *mApplicationWidget;
+    ApplicationListWidget *mApplicationListWidget;
     ResumeWidget *mResumeWidget;
 };
 

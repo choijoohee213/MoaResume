@@ -5,7 +5,7 @@
 }
 
 /* Sidebar Menu Buttons */
-#menuBtnApplication,
+#menuBtnApplicationList,
 #menuBtnResume {
     background-color: transparent;
     color: #ecf0f1;
@@ -16,12 +16,12 @@
     font-weight: 500;
 }
 
-#menuBtnApplication:hover,
+#menuBtnApplicationList:hover,
 #menuBtnResume:hover {
     background-color: #34495e;
 }
 
-#menuBtnApplication:checked,
+#menuBtnApplicationList:checked,
 #menuBtnResume:checked {
     background-color: #3498db;
     color: white;

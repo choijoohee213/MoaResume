@@ -21,12 +21,12 @@ void WorkspaceSidebar::setupUi() {
 }
 
 void WorkspaceSidebar::setupMenuButtons() {
-    mApplicationBtn = new QPushButton(WorkspaceConstants::MENU_TEXT_APPLICATION, this);
-    mApplicationBtn->setObjectName(WorkspaceConstants::MENU_BTN_APPLICATION);
+    mApplicationBtn = new QPushButton(WorkspaceConstants::MENU_TEXT_APPLICATION_LIST, this);
+    mApplicationBtn->setObjectName(WorkspaceConstants::MENU_BTN_APPLICATION_LIST);
     mApplicationBtn->setCheckable(true);
     mApplicationBtn->setChecked(true);
     mMenuButtonGroup->addButton(mApplicationBtn,
-        static_cast<int>(WorkspaceConstants::MENU_INDEX::APPLICATION));
+        static_cast<int>(WorkspaceConstants::MENU_INDEX::APPLICATION_LIST));
 
     mResumeBtn = new QPushButton(WorkspaceConstants::MENU_TEXT_RESUME, this);
     mResumeBtn->setObjectName(WorkspaceConstants::MENU_BTN_RESUME);

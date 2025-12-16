@@ -17,12 +17,12 @@ void WorkspaceWidget::setupUi() {
     mStackedWidget = new QStackedWidget(this);
 
     // Create content widgets
-    mApplicationWidget = new ApplicationWidget(this);
+    mApplicationListWidget = new ApplicationListWidget(this);
     mResumeWidget = new ResumeWidget(this);
 
     // Add widgets to stacked widget (order must match MENU_INDEX enum)
-    mStackedWidget->addWidget(mApplicationWidget);  // index 0: APPLICATION
-    mStackedWidget->addWidget(mResumeWidget);       // index 1: RESUME
+    mStackedWidget->addWidget(mApplicationListWidget);  // index 0: APPLICATION_LIST
+    mStackedWidget->addWidget(mResumeWidget);           // index 1: RESUME
 
     mMainLayout->addWidget(mSidebar);
     mMainLayout->addWidget(mStackedWidget, 1);
