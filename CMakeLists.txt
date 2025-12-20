@@ -24,6 +24,8 @@ add_executable(MoaResume
         pkg/workspace/workspace.qrc
         pkg/applicationList/widget/ApplicationListWidget.cpp
         pkg/applicationList/widget/ApplicationListWidget.h
+        pkg/applicationList/model/Application.cpp
+        pkg/applicationList/model/Application.h
         pkg/resume/widget/ResumeWidget.cpp
         pkg/resume/widget/ResumeWidget.h
 )
