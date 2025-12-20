@@ -2,6 +2,11 @@
 #define APPLICATIONLISTWIDGET_H
 
 #include <QWidget>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QVBoxLayout>
+#include <QHeaderView>
+#include <QAbstractItemView>
 
 class ApplicationListWidget : public QWidget {
     Q_OBJECT
@@ -13,6 +18,14 @@ public:
 
 private:
     void setupUi();
+
+    void setupTable();
+
+    void loadSampleData();
+
+private:
+    QVBoxLayout *mMainLayout;
+    QTableWidget *mTableWidget;
 };
 
 
