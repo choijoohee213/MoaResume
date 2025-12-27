@@ -79,8 +79,8 @@ bool ApplicationListService::save() {
     }
 
     QJsonObject rootObject;
-    rootObject["applications"] = jsonArray;
-    rootObject["nextId"] = mNextId;
+    rootObject[ApplicationListConstants::JSON_KEY_APPLICATIONS] = jsonArray;
+    rootObject[ApplicationListConstants::JSON_KEY_NEXT_ID] = mNextId;
 
     QJsonDocument doc(rootObject);
     QString filePath = JsonFileUtils::getDataFilePath(ApplicationListConstants::APPLICATION_LIST_JSON_FILE_NAME);
@@ -104,8 +104,8 @@ bool ApplicationListService::load() {
     }
 
     QJsonObject rootObject = doc.object();
-    QJsonArray jsonArray = rootObject["applications"].toArray();
-    mNextId = rootObject["nextId"].toInt(0);
+    QJsonArray jsonArray = rootObject[ApplicationListConstants::JSON_KEY_APPLICATIONS].toArray();
+    mNextId = rootObject[ApplicationListConstants::JSON_KEY_NEXT_ID].toInt(0);
 
     mApplications.clear();
     for (const QJsonValue &value: jsonArray) {
