@@ -32,6 +32,7 @@ add_executable(MoaResume
         pkg/applicationList/service/ApplicationListService.h
         pkg/resume/widget/ResumeWidget.cpp
         pkg/resume/widget/ResumeWidget.h
+        pkg/applicationList/ApplicationListConstants.h
 )
 
 target_link_libraries(MoaResume
