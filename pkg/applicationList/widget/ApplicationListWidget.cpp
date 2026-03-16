@@ -1,20 +1,54 @@
 #include "ApplicationListWidget.h"
+#include "ApplicationDialog.h"
+#include "../ApplicationListConstants.h"
+#include <QMessageBox>
+#include <QFile>
 
-ApplicationListWidget::ApplicationListWidget(QWidget *parent) : QWidget(parent) {
+ApplicationListWidget::ApplicationListWidget(QWidget *parent)
+    : QWidget(parent), mService(ApplicationListService::getInstance()) {
     setupUi();
+    setupToolbar();
     setupTable();
-    loadSampleData();
+    connectSignals();
+    loadStyles();
+    loadApplications();
 }
 
 void ApplicationListWidget::setupUi() {
     mMainLayout = new QVBoxLayout(this);
     mMainLayout->setContentsMargins(20, 20, 20, 20);
-    mMainLayout->setSpacing(0);
+    mMainLayout->setSpacing(10);
 
     mTableWidget = new QTableWidget(this);
-    mMainLayout->addWidget(mTableWidget);
 
     setLayout(mMainLayout);
+}
+
+void ApplicationListWidget::setupToolbar() {
+    mToolbarLayout = new QHBoxLayout();
+    mToolbarLayout->setSpacing(10);
+    mToolbarLayout->setContentsMargins(0, 0, 0, 10);
+
+    mAddButton = new QPushButton(ApplicationListConstants::BTN_TEXT_ADD, this);
+    mAddButton->setObjectName(ApplicationListConstants::BTN_NAME_ADD);
+    mAddButton->setCursor(Qt::PointingHandCursor);
+
+    mEditButton = new QPushButton(ApplicationListConstants::BTN_TEXT_EDIT, this);
+    mEditButton->setObjectName(ApplicationListConstants::BTN_NAME_EDIT);
+    mEditButton->setCursor(Qt::PointingHandCursor);
+    mEditButton->setEnabled(false);
+
+    mDeleteButton = new QPushButton(ApplicationListConstants::BTN_TEXT_DELETE, this);
+    mDeleteButton->setObjectName(ApplicationListConstants::BTN_NAME_DELETE);
+    mDeleteButton->setCursor(Qt::PointingHandCursor);
+    mDeleteButton->setEnabled(false);
+
+    mToolbarLayout->addWidget(mAddButton);
+    mToolbarLayout->addWidget(mEditButton);
+    mToolbarLayout->addWidget(mDeleteButton);
+    mToolbarLayout->addStretch();
+
+    mMainLayout->insertLayout(0, mToolbarLayout);
 }
 
 void ApplicationListWidget::setupTable() {
@@ -32,23 +66,115 @@ void ApplicationListWidget::setupTable() {
     mTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     mTableWidget->setColumnWidth(2, 120);
     mTableWidget->setColumnWidth(3, 150);
+
+    mMainLayout->addWidget(mTableWidget);
 }
 
-void ApplicationListWidget::loadSampleData() {
-    mTableWidget->setRowCount(3);
+void ApplicationListWidget::connectSignals() {
+    connect(mAddButton, &QPushButton::clicked, this, &ApplicationListWidget::onAddClicked);
+    connect(mEditButton, &QPushButton::clicked, this, &ApplicationListWidget::onEditClicked);
+    connect(mDeleteButton, &QPushButton::clicked, this, &ApplicationListWidget::onDeleteClicked);
 
-    mTableWidget->setItem(0, 0, new QTableWidgetItem("네이버"));
-    mTableWidget->setItem(0, 1, new QTableWidgetItem("백엔드 개발자"));
-    mTableWidget->setItem(0, 2, new QTableWidgetItem("서류 통과"));
-    mTableWidget->setItem(0, 3, new QTableWidgetItem("2025-01-15"));
+    connect(mTableWidget, &QTableWidget::itemSelectionChanged,
+            this, &ApplicationListWidget::onSelectionChanged);
 
-    mTableWidget->setItem(1, 0, new QTableWidgetItem("카카오"));
-    mTableWidget->setItem(1, 1, new QTableWidgetItem("프론트엔드 개발자"));
-    mTableWidget->setItem(1, 2, new QTableWidgetItem("지원 완료"));
-    mTableWidget->setItem(1, 3, new QTableWidgetItem("2025-01-20"));
+    connect(&mService, &ApplicationListService::dataChanged,
+            this, &ApplicationListWidget::onDataChanged);
+}
 
-    mTableWidget->setItem(2, 0, new QTableWidgetItem("라인"));
-    mTableWidget->setItem(2, 1, new QTableWidgetItem("풀스택 개발자"));
-    mTableWidget->setItem(2, 2, new QTableWidgetItem("면접 예정"));
-    mTableWidget->setItem(2, 3, new QTableWidgetItem("2025-01-10"));
+void ApplicationListWidget::loadStyles() {
+    QFile styleFile(ApplicationListConstants::QSS_PATH);
+    if (styleFile.open(QFile::ReadOnly)) {
+        QString styleSheet = QLatin1String(styleFile.readAll());
+        setStyleSheet(styleSheet);
+        styleFile.close();
+    }
+}
+
+void ApplicationListWidget::loadApplications() {
+    QList<Application> applications = mService.getAllApplications();
+
+    mTableWidget->setRowCount(applications.size());
+
+    for (int i = 0; i < applications.size(); ++i) {
+        const Application &app = applications[i];
+
+        QTableWidgetItem *companyItem = new QTableWidgetItem(app.getCompanyName());
+        companyItem->setData(Qt::UserRole, app.getId());
+
+        mTableWidget->setItem(i, 0, companyItem);
+        mTableWidget->setItem(i, 1, new QTableWidgetItem(app.getPosition()));
+        mTableWidget->setItem(i, 2, new QTableWidgetItem(app.getStatus()));
+        mTableWidget->setItem(i, 3, new QTableWidgetItem(app.getDeadline().toString(Qt::ISODate)));
+    }
+}
+
+void ApplicationListWidget::updateButtonStates() {
+    bool hasSelection = !mTableWidget->selectedItems().isEmpty();
+    mEditButton->setEnabled(hasSelection);
+    mDeleteButton->setEnabled(hasSelection);
+}
+
+int ApplicationListWidget::getSelectedApplicationId() const {
+    QList<QTableWidgetItem*> selectedItems = mTableWidget->selectedItems();
+    if (selectedItems.isEmpty()) return -1;
+
+    int row = selectedItems.first()->row();
+    QTableWidgetItem *firstItem = mTableWidget->item(row, 0);
+    return firstItem->data(Qt::UserRole).toInt();
+}
+
+void ApplicationListWidget::onAddClicked() {
+    ApplicationDialog dialog(ApplicationDialog::ADD, this);
+    if (dialog.exec() == QDialog::Accepted) {
+        Application newApp = dialog.getApplication();
+        if (!mService.addApplication(newApp)) {
+            QMessageBox::warning(this,
+                ApplicationListConstants::MSG_TITLE_ERROR,
+                ApplicationListConstants::MSG_ADD_FAILED);
+        }
+    }
+}
+
+void ApplicationListWidget::onEditClicked() {
+    int selectedId = getSelectedApplicationId();
+    if (selectedId < 0) return;
+
+    Application app = mService.getApplicationById(selectedId);
+    ApplicationDialog dialog(ApplicationDialog::EDIT, app, this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        Application updatedApp = dialog.getApplication();
+        if (!mService.updateApplication(updatedApp)) {
+            QMessageBox::warning(this,
+                ApplicationListConstants::MSG_TITLE_ERROR,
+                ApplicationListConstants::MSG_UPDATE_FAILED);
+        }
+    }
+}
+
+void ApplicationListWidget::onDeleteClicked() {
+    int selectedId = getSelectedApplicationId();
+    if (selectedId < 0) return;
+
+    QMessageBox::StandardButton reply = QMessageBox::question(this,
+        ApplicationListConstants::MSG_TITLE_CONFIRM,
+        ApplicationListConstants::MSG_DELETE_CONFIRM,
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        if (!mService.deleteApplication(selectedId)) {
+            QMessageBox::warning(this,
+                ApplicationListConstants::MSG_TITLE_ERROR,
+                ApplicationListConstants::MSG_DELETE_FAILED);
+        }
+    }
+}
+
+void ApplicationListWidget::onSelectionChanged() {
+    updateButtonStates();
+}
+
+void ApplicationListWidget::onDataChanged() {
+    loadApplications();
 }

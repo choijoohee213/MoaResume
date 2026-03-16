@@ -5,8 +5,11 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QAbstractItemView>
+#include <QPushButton>
+#include "../service/ApplicationListService.h"
 
 class ApplicationListWidget : public QWidget {
     Q_OBJECT
@@ -19,13 +22,41 @@ public:
 private:
     void setupUi();
 
+    void setupToolbar();
+
     void setupTable();
 
-    void loadSampleData();
+    void connectSignals();
+
+    void loadStyles();
+
+    void loadApplications();
+
+    void updateButtonStates();
+
+    int getSelectedApplicationId() const;
+
+private slots:
+    void onAddClicked();
+
+    void onEditClicked();
+
+    void onDeleteClicked();
+
+    void onSelectionChanged();
+
+    void onDataChanged();
 
 private:
     QVBoxLayout *mMainLayout;
+    QHBoxLayout *mToolbarLayout;
     QTableWidget *mTableWidget;
+
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mDeleteButton;
+
+    ApplicationListService &mService;
 };
 
 
