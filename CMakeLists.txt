@@ -30,6 +30,9 @@ add_executable(MoaResume
         pkg/applicationList/model/Application.h
         pkg/applicationList/service/ApplicationListService.cpp
         pkg/applicationList/service/ApplicationListService.h
+        pkg/applicationList/widget/ApplicationDialog.cpp
+        pkg/applicationList/widget/ApplicationDialog.h
+        pkg/applicationList/applicationList.qrc
         pkg/resume/widget/ResumeWidget.cpp
         pkg/resume/widget/ResumeWidget.h
         pkg/applicationList/ApplicationListConstants.h
