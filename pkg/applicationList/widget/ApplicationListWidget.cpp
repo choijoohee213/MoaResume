@@ -1,5 +1,4 @@
 #include "ApplicationListWidget.h"
-#include "ApplicationDialog.h"
 #include "ApplicationDetailDialog.h"
 #include "../ApplicationListConstants.h"
 #include <QMessageBox>
@@ -121,10 +120,11 @@ int ApplicationListWidget::getSelectedApplicationId() const {
 }
 
 void ApplicationListWidget::onAddClicked() {
-    ApplicationDialog dialog(ApplicationDialog::ADD, this);
+    Application newApp;
+    ApplicationDetailDialog dialog(newApp, this);
     if (dialog.exec() == QDialog::Accepted) {
-        Application newApp = dialog.getApplication();
-        if (!mService.addApplication(newApp)) {
+        Application addedApp = dialog.getApplication();
+        if (!mService.addApplication(addedApp)) {
             QMessageBox::warning(this,
                 ApplicationListConstants::MSG_TITLE_ERROR,
                 ApplicationListConstants::MSG_ADD_FAILED);

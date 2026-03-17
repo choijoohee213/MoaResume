@@ -30,8 +30,6 @@ add_executable(MoaResume
         pkg/applicationList/model/Application.h
         pkg/applicationList/service/ApplicationListService.cpp
         pkg/applicationList/service/ApplicationListService.h
-        pkg/applicationList/widget/ApplicationDialog.cpp
-        pkg/applicationList/widget/ApplicationDialog.h
         pkg/applicationList/widget/ApplicationDetailDialog.cpp
         pkg/applicationList/widget/ApplicationDetailDialog.h
         pkg/applicationList/applicationList.qrc
