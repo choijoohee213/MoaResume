@@ -6,7 +6,7 @@
 #include <QMessageBox>
 
 ApplicationDetailDialog::ApplicationDetailDialog(const Application &application, QWidget *parent)
-    : QDialog(parent), mApplicationId(application.getId()) {
+    : QDialog(parent), mApplicationId(application.getId()), mPreviewVisible(true) {
     setupUi();
     setupInputFields();
     loadData(application);
@@ -15,7 +15,7 @@ ApplicationDetailDialog::ApplicationDetailDialog(const Application &application,
 
 void ApplicationDetailDialog::setupUi() {
     setWindowTitle(ApplicationListConstants::DIALOG_TITLE_DETAIL);
-    setMinimumSize(500, 600);
+    setMinimumSize(800, 600);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -32,9 +32,25 @@ void ApplicationDetailDialog::setupUi() {
     formLayout->addRow(ApplicationListConstants::LABEL_STATUS, mStatusComboBox);
     formLayout->addRow(ApplicationListConstants::LABEL_DEADLINE, mDeadlineEdit);
 
+    QHBoxLayout *notesToolbarLayout = new QHBoxLayout();
+    mTogglePreviewButton = new QPushButton("미리보기 숨기기", this);
+    mTogglePreviewButton->setCursor(Qt::PointingHandCursor);
+    notesToolbarLayout->addWidget(mTogglePreviewButton);
+    notesToolbarLayout->addStretch();
+
     mNotesEdit = new QTextEdit(this);
     mNotesEdit->setAcceptRichText(false);
-    mNotesEdit->setMinimumHeight(300);
+    mNotesEdit->setPlaceholderText("마크다운으로 작성하세요...");
+
+    mNotesPreview = new QTextBrowser(this);
+    mNotesPreview->setOpenExternalLinks(true);
+
+    mNotesSplitter = new QSplitter(Qt::Horizontal, this);
+    mNotesSplitter->addWidget(mNotesEdit);
+    mNotesSplitter->addWidget(mNotesPreview);
+    mNotesSplitter->setStretchFactor(0, 1);
+    mNotesSplitter->setStretchFactor(1, 1);
+    mNotesSplitter->setMinimumHeight(300);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     mSaveButton = new QPushButton(ApplicationListConstants::BTN_TEXT_SAVE, this);
@@ -44,7 +60,8 @@ void ApplicationDetailDialog::setupUi() {
     buttonLayout->addWidget(mCancelButton);
 
     mainLayout->addLayout(formLayout);
-    mainLayout->addWidget(mNotesEdit);
+    mainLayout->addLayout(notesToolbarLayout);
+    mainLayout->addWidget(mNotesSplitter);
     mainLayout->addLayout(buttonLayout);
 
     setLayout(mainLayout);
@@ -63,6 +80,8 @@ void ApplicationDetailDialog::setupInputFields() {
 void ApplicationDetailDialog::connectSignals() {
     connect(mSaveButton, &QPushButton::clicked, this, &ApplicationDetailDialog::onSaveClicked);
     connect(mCancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    connect(mNotesEdit, &QTextEdit::textChanged, this, &ApplicationDetailDialog::onNotesTextChanged);
+    connect(mTogglePreviewButton, &QPushButton::clicked, this, &ApplicationDetailDialog::onTogglePreviewClicked);
 }
 
 void ApplicationDetailDialog::loadData(const Application &application) {
@@ -76,6 +95,7 @@ void ApplicationDetailDialog::loadData(const Application &application) {
 
     mDeadlineEdit->setDate(application.getDeadline());
     mNotesEdit->setPlainText(application.getNotes());
+    mNotesPreview->setMarkdown(application.getNotes());
 }
 
 bool ApplicationDetailDialog::validateInput() {
@@ -113,4 +133,14 @@ Application ApplicationDetailDialog::getApplication() const {
     app.setNotes(mNotesEdit->toPlainText());
 
     return app;
+}
+
+void ApplicationDetailDialog::onNotesTextChanged() {
+    mNotesPreview->setMarkdown(mNotesEdit->toPlainText());
+}
+
+void ApplicationDetailDialog::onTogglePreviewClicked() {
+    mPreviewVisible = !mPreviewVisible;
+    mNotesPreview->setVisible(mPreviewVisible);
+    mTogglePreviewButton->setText(mPreviewVisible ? "미리보기 숨기기" : "미리보기 보기");
 }

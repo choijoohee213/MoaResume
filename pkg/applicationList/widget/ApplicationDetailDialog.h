@@ -6,8 +6,10 @@
 #include <QDateEdit>
 #include <QComboBox>
 #include <QTextEdit>
+#include <QTextBrowser>
 #include <QPushButton>
 #include <QFormLayout>
+#include <QSplitter>
 #include "../model/Application.h"
 
 class ApplicationDetailDialog : public QDialog {
@@ -28,6 +30,8 @@ private:
 
 private slots:
     void onSaveClicked();
+    void onNotesTextChanged();
+    void onTogglePreviewClicked();
 
 private:
     int mApplicationId;
@@ -37,9 +41,14 @@ private:
     QComboBox *mStatusComboBox;
     QDateEdit *mDeadlineEdit;
     QTextEdit *mNotesEdit;
+    QTextBrowser *mNotesPreview;
+    QSplitter *mNotesSplitter;
+    QPushButton *mTogglePreviewButton;
 
     QPushButton *mSaveButton;
     QPushButton *mCancelButton;
+
+    bool mPreviewVisible;
 };
 
 #endif
