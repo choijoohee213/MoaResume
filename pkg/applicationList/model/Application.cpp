@@ -2,7 +2,7 @@
 #include "../ApplicationListConstants.h"
 
 Application::Application()
-    : mId(-1), mCompanyName(""), mPosition(""), mStatus(""), mDeadline(QDate()), mNotes("") {
+    : mId(-1), mCompanyName(""), mPosition(""), mStatus(""), mDeadline(QDate::currentDate()), mNotes("") {
 }
 
 Application::Application(const QString &companyName, const QString &position,
