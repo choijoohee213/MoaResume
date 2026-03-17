@@ -12,12 +12,15 @@ namespace ApplicationListConstants {
 
     constexpr const char *JSON_KEY_APPLICATIONS = "applications";
     constexpr const char *JSON_KEY_NEXT_ID = "nextId";
+    constexpr const char *JSON_KEY_NOTES = "notes";
 
     constexpr const char *QSS_PATH = ":/applicationList/styles/applicationList.qss";
 
     constexpr const char *BTN_TEXT_ADD = "추가";
     constexpr const char *BTN_TEXT_EDIT = "수정";
     constexpr const char *BTN_TEXT_DELETE = "삭제";
+    constexpr const char *BTN_TEXT_SAVE = "저장";
+    constexpr const char *BTN_TEXT_CANCEL = "취소";
 
     constexpr const char *BTN_NAME_ADD = "addButton";
     constexpr const char *BTN_NAME_EDIT = "editButton";
@@ -25,11 +28,13 @@ namespace ApplicationListConstants {
 
     constexpr const char *DIALOG_TITLE_ADD = "지원서 추가";
     constexpr const char *DIALOG_TITLE_EDIT = "지원서 수정";
+    constexpr const char *DIALOG_TITLE_DETAIL = "지원서 상세";
 
     constexpr const char *LABEL_COMPANY_NAME = "기업 이름:";
     constexpr const char *LABEL_POSITION = "직무:";
     constexpr const char *LABEL_STATUS = "상태:";
     constexpr const char *LABEL_DEADLINE = "마감일:";
+    constexpr const char *LABEL_NOTES = "메모:";
 
     constexpr const char *STATUS_APPLIED = "지원 완료";
     constexpr const char *STATUS_DOCUMENT_PASSED = "서류 통과";
