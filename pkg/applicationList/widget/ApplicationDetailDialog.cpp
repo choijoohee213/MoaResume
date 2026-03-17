@@ -20,6 +20,8 @@ void ApplicationDetailDialog::setupUi() {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     QFormLayout *formLayout = new QFormLayout();
+    formLayout->setLabelAlignment(Qt::AlignLeft);
+    formLayout->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     mCompanyNameEdit = new QLineEdit(this);
     mPositionEdit = new QLineEdit(this);
