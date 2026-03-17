@@ -17,6 +17,7 @@ public:
     QString getPosition() const { return mPosition; }
     QString getStatus() const { return mStatus; }
     QDate getDeadline() const { return mDeadline; }
+    QString getNotes() const { return mNotes; }
 
     // Setters
     void setId(int id) { mId = id; }
@@ -24,6 +25,7 @@ public:
     void setPosition(const QString &position) { mPosition = position; }
     void setStatus(const QString &status) { mStatus = status; }
     void setDeadline(const QDate &deadline) { mDeadline = deadline; }
+    void setNotes(const QString &notes) { mNotes = notes; }
 
     // JSON serialization
     QJsonObject toJson() const;
@@ -35,6 +37,7 @@ private:
     QString mPosition;
     QString mStatus;
     QDate mDeadline;
+    QString mNotes;
 };
 
 #endif // APPLICATION_H

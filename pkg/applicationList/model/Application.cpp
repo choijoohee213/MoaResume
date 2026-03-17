@@ -2,13 +2,13 @@
 #include "../ApplicationListConstants.h"
 
 Application::Application()
-    : mId(-1), mCompanyName(""), mPosition(""), mStatus(""), mDeadline(QDate()) {
+    : mId(-1), mCompanyName(""), mPosition(""), mStatus(""), mDeadline(QDate()), mNotes("") {
 }
 
 Application::Application(const QString &companyName, const QString &position,
                          const QString &status, const QDate &deadline)
     : mId(-1), mCompanyName(companyName), mPosition(position),
-      mStatus(status), mDeadline(deadline) {
+      mStatus(status), mDeadline(deadline), mNotes("") {
 }
 
 QJsonObject Application::toJson() const {
@@ -18,6 +18,7 @@ QJsonObject Application::toJson() const {
     json[ApplicationListConstants::JSON_KEY_POSITION] = mPosition;
     json[ApplicationListConstants::JSON_KEY_STATUS] = mStatus;
     json[ApplicationListConstants::JSON_KEY_DEADLINE] = mDeadline.toString(Qt::ISODate);
+    json[ApplicationListConstants::JSON_KEY_NOTES] = mNotes;
     return json;
 }
 
@@ -28,5 +29,6 @@ Application Application::fromJson(const QJsonObject &json) {
     app.setPosition(json[ApplicationListConstants::JSON_KEY_POSITION].toString());
     app.setStatus(json[ApplicationListConstants::JSON_KEY_STATUS].toString());
     app.setDeadline(QDate::fromString(json[ApplicationListConstants::JSON_KEY_DEADLINE].toString(), Qt::ISODate));
+    app.setNotes(json[ApplicationListConstants::JSON_KEY_NOTES].toString());
     return app;
 }
