@@ -1,5 +1,6 @@
 #include "ApplicationListWidget.h"
 #include "ApplicationDialog.h"
+#include "ApplicationDetailDialog.h"
 #include "../ApplicationListConstants.h"
 #include <QMessageBox>
 #include <QFile>
@@ -33,18 +34,12 @@ void ApplicationListWidget::setupToolbar() {
     mAddButton->setObjectName(ApplicationListConstants::BTN_NAME_ADD);
     mAddButton->setCursor(Qt::PointingHandCursor);
 
-    mEditButton = new QPushButton(ApplicationListConstants::BTN_TEXT_EDIT, this);
-    mEditButton->setObjectName(ApplicationListConstants::BTN_NAME_EDIT);
-    mEditButton->setCursor(Qt::PointingHandCursor);
-    mEditButton->setEnabled(false);
-
     mDeleteButton = new QPushButton(ApplicationListConstants::BTN_TEXT_DELETE, this);
     mDeleteButton->setObjectName(ApplicationListConstants::BTN_NAME_DELETE);
     mDeleteButton->setCursor(Qt::PointingHandCursor);
     mDeleteButton->setEnabled(false);
 
     mToolbarLayout->addWidget(mAddButton);
-    mToolbarLayout->addWidget(mEditButton);
     mToolbarLayout->addWidget(mDeleteButton);
     mToolbarLayout->addStretch();
 
@@ -72,11 +67,13 @@ void ApplicationListWidget::setupTable() {
 
 void ApplicationListWidget::connectSignals() {
     connect(mAddButton, &QPushButton::clicked, this, &ApplicationListWidget::onAddClicked);
-    connect(mEditButton, &QPushButton::clicked, this, &ApplicationListWidget::onEditClicked);
     connect(mDeleteButton, &QPushButton::clicked, this, &ApplicationListWidget::onDeleteClicked);
 
     connect(mTableWidget, &QTableWidget::itemSelectionChanged,
             this, &ApplicationListWidget::onSelectionChanged);
+
+    connect(mTableWidget, &QTableWidget::cellDoubleClicked,
+            this, &ApplicationListWidget::onTableDoubleClicked);
 
     connect(&mService, &ApplicationListService::dataChanged,
             this, &ApplicationListWidget::onDataChanged);
@@ -111,7 +108,6 @@ void ApplicationListWidget::loadApplications() {
 
 void ApplicationListWidget::updateButtonStates() {
     bool hasSelection = !mTableWidget->selectedItems().isEmpty();
-    mEditButton->setEnabled(hasSelection);
     mDeleteButton->setEnabled(hasSelection);
 }
 
@@ -132,23 +128,6 @@ void ApplicationListWidget::onAddClicked() {
             QMessageBox::warning(this,
                 ApplicationListConstants::MSG_TITLE_ERROR,
                 ApplicationListConstants::MSG_ADD_FAILED);
-        }
-    }
-}
-
-void ApplicationListWidget::onEditClicked() {
-    int selectedId = getSelectedApplicationId();
-    if (selectedId < 0) return;
-
-    Application app = mService.getApplicationById(selectedId);
-    ApplicationDialog dialog(ApplicationDialog::EDIT, app, this);
-
-    if (dialog.exec() == QDialog::Accepted) {
-        Application updatedApp = dialog.getApplication();
-        if (!mService.updateApplication(updatedApp)) {
-            QMessageBox::warning(this,
-                ApplicationListConstants::MSG_TITLE_ERROR,
-                ApplicationListConstants::MSG_UPDATE_FAILED);
         }
     }
 }
@@ -177,4 +156,23 @@ void ApplicationListWidget::onSelectionChanged() {
 
 void ApplicationListWidget::onDataChanged() {
     loadApplications();
+}
+
+void ApplicationListWidget::onTableDoubleClicked(int row, int column) {
+    QTableWidgetItem *firstItem = mTableWidget->item(row, 0);
+    if (!firstItem) return;
+
+    int appId = firstItem->data(Qt::UserRole).toInt();
+
+    Application app = mService.getApplicationById(appId);
+    ApplicationDetailDialog dialog(app, this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        Application updatedApp = dialog.getApplication();
+        if (!mService.updateApplication(updatedApp)) {
+            QMessageBox::warning(this,
+                ApplicationListConstants::MSG_TITLE_ERROR,
+                ApplicationListConstants::MSG_UPDATE_FAILED);
+        }
+    }
 }

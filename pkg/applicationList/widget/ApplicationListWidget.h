@@ -39,13 +39,13 @@ private:
 private slots:
     void onAddClicked();
 
-    void onEditClicked();
-
     void onDeleteClicked();
 
     void onSelectionChanged();
 
     void onDataChanged();
+
+    void onTableDoubleClicked(int row, int column);
 
 private:
     QVBoxLayout *mMainLayout;
@@ -53,7 +53,6 @@ private:
     QTableWidget *mTableWidget;
 
     QPushButton *mAddButton;
-    QPushButton *mEditButton;
     QPushButton *mDeleteButton;
 
     ApplicationListService &mService;
