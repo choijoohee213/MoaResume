@@ -17,6 +17,8 @@ find_package(Qt6 COMPONENTS
 add_executable(MoaResume
         main.cpp
         ui/MainWindow.cpp ui/MainWindow.h
+        common/util/JsonFileUtils.cpp
+        common/util/JsonFileUtils.h
         pkg/home/widget/HomeWidget.cpp pkg/home/widget/HomeWidget.h
         pkg/workspace/widget/WorkspaceWidget.cpp pkg/workspace/widget/WorkspaceWidget.h
         pkg/workspace/widget/WorkspaceSidebar.cpp pkg/workspace/widget/WorkspaceSidebar.h
@@ -24,8 +26,16 @@ add_executable(MoaResume
         pkg/workspace/workspace.qrc
         pkg/applicationList/widget/ApplicationListWidget.cpp
         pkg/applicationList/widget/ApplicationListWidget.h
+        pkg/applicationList/model/Application.cpp
+        pkg/applicationList/model/Application.h
+        pkg/applicationList/service/ApplicationListService.cpp
+        pkg/applicationList/service/ApplicationListService.h
+        pkg/applicationList/widget/ApplicationDetailDialog.cpp
+        pkg/applicationList/widget/ApplicationDetailDialog.h
+        pkg/applicationList/applicationList.qrc
         pkg/resume/widget/ResumeWidget.cpp
         pkg/resume/widget/ResumeWidget.h
+        pkg/applicationList/ApplicationListConstants.h
 )
 
 target_link_libraries(MoaResume

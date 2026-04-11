@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/applicationList">
+        <file>styles/applicationList.qss</file>
+    </qresource>
+</RCC>
