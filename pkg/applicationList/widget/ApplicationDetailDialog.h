@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QFormLayout>
 #include <QSplitter>
+#include <QLabel>
 #include "../model/Application.h"
 
 class ApplicationDetailDialog : public QDialog {
@@ -32,6 +33,7 @@ private slots:
     void onSaveClicked();
     void onNotesTextChanged();
     void onTogglePreviewClicked();
+    void onLogoUploadClicked();
 
 private:
     int mApplicationId;
@@ -44,6 +46,10 @@ private:
     QTextBrowser *mNotesPreview;
     QSplitter *mNotesSplitter;
     QPushButton *mTogglePreviewButton;
+
+    QLabel *mLogoPreview;
+    QPushButton *mLogoUploadButton;
+    QString mLogoPath;
 
     QPushButton *mSaveButton;
     QPushButton *mCancelButton;

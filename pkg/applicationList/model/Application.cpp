@@ -19,6 +19,7 @@ QJsonObject Application::toJson() const {
     json[ApplicationListConstants::JSON_KEY_STATUS] = mStatus;
     json[ApplicationListConstants::JSON_KEY_DEADLINE] = mDeadline.toString(Qt::ISODate);
     json[ApplicationListConstants::JSON_KEY_NOTES] = mNotes;
+    json[ApplicationListConstants::JSON_KEY_LOGO_PATH] = mLogoPath;
     return json;
 }
 
@@ -30,5 +31,6 @@ Application Application::fromJson(const QJsonObject &json) {
     app.setStatus(json[ApplicationListConstants::JSON_KEY_STATUS].toString());
     app.setDeadline(QDate::fromString(json[ApplicationListConstants::JSON_KEY_DEADLINE].toString(), Qt::ISODate));
     app.setNotes(json[ApplicationListConstants::JSON_KEY_NOTES].toString());
+    app.setLogoPath(json[ApplicationListConstants::JSON_KEY_LOGO_PATH].toString());
     return app;
 }

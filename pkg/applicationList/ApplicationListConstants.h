@@ -13,6 +13,7 @@ namespace ApplicationListConstants {
     constexpr const char *JSON_KEY_APPLICATIONS = "applications";
     constexpr const char *JSON_KEY_NEXT_ID = "nextId";
     constexpr const char *JSON_KEY_NOTES = "notes";
+    constexpr const char *JSON_KEY_LOGO_PATH = "logoPath";
 
     constexpr const char *QSS_PATH = ":/applicationList/styles/applicationList.qss";
 
@@ -35,6 +36,7 @@ namespace ApplicationListConstants {
     constexpr const char *LABEL_STATUS = "상태:";
     constexpr const char *LABEL_DEADLINE = "마감일:";
     constexpr const char *LABEL_NOTES = "메모:";
+    constexpr const char *LABEL_LOGO = "기업 로고:";
 
     constexpr const char *STATUS_APPLIED = "지원 완료";
     constexpr const char *STATUS_DOCUMENT_PASSED = "서류 통과";

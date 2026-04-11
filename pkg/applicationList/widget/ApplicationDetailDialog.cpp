@@ -4,12 +4,17 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QPixmap>
 
 ApplicationDetailDialog::ApplicationDetailDialog(const Application &application, QWidget *parent)
     : QDialog(parent), mApplicationId(application.getId()), mPreviewVisible(true) {
     setupUi();
+
     setupInputFields();
+
     loadData(application);
+
     connectSignals();
 }
 
@@ -29,6 +34,26 @@ void ApplicationDetailDialog::setupUi() {
     mDeadlineEdit = new QDateEdit(this);
     mDeadlineEdit->setCalendarPopup(true);
 
+    mLogoPreview = new QLabel(this);
+    mLogoPreview->setFixedSize(64, 64);
+    mLogoPreview->setScaledContents(true);
+    mLogoPreview->setFrameShape(QFrame::Box);
+    mLogoPreview->setText("없음");
+    mLogoPreview->setAlignment(Qt::AlignCenter);
+
+    mLogoUploadButton = new QPushButton("업로드", this);
+    mLogoUploadButton->setCursor(Qt::PointingHandCursor);
+
+    QHBoxLayout *logoLayout = new QHBoxLayout();
+    logoLayout->setContentsMargins(0, 0, 0, 0);
+    logoLayout->addWidget(mLogoPreview);
+    logoLayout->addWidget(mLogoUploadButton);
+    logoLayout->addStretch();
+
+    QWidget *logoWidget = new QWidget(this);
+    logoWidget->setLayout(logoLayout);
+
+    formLayout->addRow(ApplicationListConstants::LABEL_LOGO, logoWidget);
     formLayout->addRow(ApplicationListConstants::LABEL_COMPANY_NAME, mCompanyNameEdit);
     formLayout->addRow(ApplicationListConstants::LABEL_POSITION, mPositionEdit);
     formLayout->addRow(ApplicationListConstants::LABEL_STATUS, mStatusComboBox);
@@ -84,6 +109,7 @@ void ApplicationDetailDialog::connectSignals() {
     connect(mCancelButton, &QPushButton::clicked, this, &QDialog::reject);
     connect(mNotesEdit, &QTextEdit::textChanged, this, &ApplicationDetailDialog::onNotesTextChanged);
     connect(mTogglePreviewButton, &QPushButton::clicked, this, &ApplicationDetailDialog::onTogglePreviewClicked);
+    connect(mLogoUploadButton, &QPushButton::clicked, this, &ApplicationDetailDialog::onLogoUploadClicked);
 }
 
 void ApplicationDetailDialog::loadData(const Application &application) {
@@ -98,6 +124,15 @@ void ApplicationDetailDialog::loadData(const Application &application) {
     mDeadlineEdit->setDate(application.getDeadline());
     mNotesEdit->setPlainText(application.getNotes());
     mNotesPreview->setMarkdown(application.getNotes());
+
+    mLogoPath = application.getLogoPath();
+    if (!mLogoPath.isEmpty()) {
+        QPixmap pixmap(mLogoPath);
+        if (!pixmap.isNull()) {
+            mLogoPreview->setPixmap(pixmap);
+            mLogoPreview->setText("");
+        }
+    }
 }
 
 bool ApplicationDetailDialog::validateInput() {
@@ -133,12 +168,30 @@ Application ApplicationDetailDialog::getApplication() const {
     app.setStatus(mStatusComboBox->currentText());
     app.setDeadline(mDeadlineEdit->date());
     app.setNotes(mNotesEdit->toPlainText());
+    app.setLogoPath(mLogoPath);
 
     return app;
 }
 
 void ApplicationDetailDialog::onNotesTextChanged() {
     mNotesPreview->setMarkdown(mNotesEdit->toPlainText());
+}
+
+void ApplicationDetailDialog::onLogoUploadClicked() {
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        "로고 이미지 선택",
+        "",
+        "이미지 파일 (*.png *.jpg *.jpeg *.webp *.svg)"
+    );
+    if (filePath.isEmpty()) return;
+
+    QPixmap pixmap(filePath);
+    if (!pixmap.isNull()) {
+        mLogoPath = filePath;
+        mLogoPreview->setPixmap(pixmap);
+        mLogoPreview->setText("");
+    }
 }
 
 void ApplicationDetailDialog::onTogglePreviewClicked() {

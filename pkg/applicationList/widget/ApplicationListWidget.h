@@ -9,6 +9,8 @@
 #include <QHeaderView>
 #include <QAbstractItemView>
 #include <QPushButton>
+#include <QIcon>
+#include <QPixmap>
 #include "../service/ApplicationListService.h"
 
 class ApplicationListWidget : public QWidget {

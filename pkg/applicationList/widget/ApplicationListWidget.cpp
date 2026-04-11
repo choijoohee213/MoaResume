@@ -55,6 +55,8 @@ void ApplicationListWidget::setupTable() {
     mTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTableWidget->setAlternatingRowColors(true);
     mTableWidget->verticalHeader()->setVisible(false);
+    mTableWidget->verticalHeader()->setDefaultSectionSize(40);
+    mTableWidget->setIconSize(QSize(32, 32));
 
     mTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     mTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -97,6 +99,13 @@ void ApplicationListWidget::loadApplications() {
 
         QTableWidgetItem *companyItem = new QTableWidgetItem(app.getCompanyName());
         companyItem->setData(Qt::UserRole, app.getId());
+
+        if (!app.getLogoPath().isEmpty()) {
+            QPixmap pixmap(app.getLogoPath());
+            if (!pixmap.isNull()) {
+                companyItem->setIcon(QIcon(pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            }
+        }
 
         mTableWidget->setItem(i, 0, companyItem);
         mTableWidget->setItem(i, 1, new QTableWidgetItem(app.getPosition()));
