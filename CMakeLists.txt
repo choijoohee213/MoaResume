@@ -19,6 +19,7 @@ add_executable(MoaResume
         ui/MainWindow.cpp ui/MainWindow.h
         common/util/JsonFileUtils.cpp
         common/util/JsonFileUtils.h
+        common/common.qrc
         pkg/home/widget/HomeWidget.cpp pkg/home/widget/HomeWidget.h
         pkg/workspace/widget/WorkspaceWidget.cpp pkg/workspace/widget/WorkspaceWidget.h
         pkg/workspace/widget/WorkspaceSidebar.cpp pkg/workspace/widget/WorkspaceSidebar.h

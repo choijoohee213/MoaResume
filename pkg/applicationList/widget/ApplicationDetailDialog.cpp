@@ -20,7 +20,8 @@ ApplicationDetailDialog::ApplicationDetailDialog(const Application &application,
 
 void ApplicationDetailDialog::setupUi() {
     setWindowTitle(ApplicationListConstants::DIALOG_TITLE_DETAIL);
-    setMinimumSize(800, 600);
+    setMinimumSize(800, 700);
+    resize(900, 750);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -77,7 +78,7 @@ void ApplicationDetailDialog::setupUi() {
     mNotesSplitter->addWidget(mNotesPreview);
     mNotesSplitter->setStretchFactor(0, 1);
     mNotesSplitter->setStretchFactor(1, 1);
-    mNotesSplitter->setMinimumHeight(300);
+    mNotesSplitter->setMinimumHeight(200);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     mSaveButton = new QPushButton(ApplicationListConstants::BTN_TEXT_SAVE, this);

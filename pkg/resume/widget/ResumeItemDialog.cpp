@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMessageBox>
+#include <QScrollArea>
 
 ResumeItemDialog::ResumeItemDialog(const ResumeItem &item, CategoryType categoryType, QWidget *parent)
     : QDialog(parent)
@@ -26,6 +27,8 @@ void ResumeItemDialog::setupUi() {
     mainLayout->setContentsMargins(24, 24, 24, 24);
     mainLayout->setSpacing(12);
 
+    QWidget *formContainer = new QWidget(this);
+
     mFormLayout = new QFormLayout();
     mFormLayout->setLabelAlignment(Qt::AlignLeft);
     mFormLayout->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -36,14 +39,14 @@ void ResumeItemDialog::setupUi() {
     for (const FieldDefinition &field : mFieldDefs) {
         switch (field.type) {
         case FieldDefinition::Text: {
-            QLineEdit *edit = new QLineEdit(this);
+            QLineEdit *edit = new QLineEdit(formContainer);
             edit->setMinimumHeight(32);
             mLineEdits[field.key] = edit;
             mFormLayout->addRow(field.label + ":", edit);
             break;
         }
         case FieldDefinition::Date: {
-            QDateEdit *edit = new QDateEdit(this);
+            QDateEdit *edit = new QDateEdit(formContainer);
             edit->setCalendarPopup(true);
             edit->setDisplayFormat("yyyy-MM");
             edit->setDate(QDate::currentDate());
@@ -55,7 +58,7 @@ void ResumeItemDialog::setupUi() {
             break;
         }
         case FieldDefinition::Combo: {
-            QComboBox *combo = new QComboBox(this);
+            QComboBox *combo = new QComboBox(formContainer);
             combo->setMinimumHeight(32);
             combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             combo->addItem("");
@@ -68,7 +71,7 @@ void ResumeItemDialog::setupUi() {
         }
         case FieldDefinition::Multiline:
         case FieldDefinition::Markdown: {
-            QTextEdit *edit = new QTextEdit(this);
+            QTextEdit *edit = new QTextEdit(formContainer);
             edit->setAcceptRichText(false);
             edit->setMinimumHeight(120);
             mTextEdits[field.key] = edit;
@@ -77,8 +80,15 @@ void ResumeItemDialog::setupUi() {
         }
         }
     }
+    formContainer->setLayout(mFormLayout);
 
-    mainLayout->addLayout(mFormLayout);
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(formContainer);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setFrameShape(QFrame::NoFrame);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    mainLayout->addWidget(scrollArea, 1);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     mSaveButton   = new QPushButton(ResumeConstants::BTN_TEXT_SAVE, this);

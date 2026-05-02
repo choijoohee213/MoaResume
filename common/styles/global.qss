@@ -1,0 +1,269 @@
+/* =============================================
+   MoaResume - 파스텔 하늘색 테마
+   ============================================= */
+
+/* 기본 배경 */
+QMainWindow,
+QWidget {
+    background-color: #EFF6FF;
+    color: #374151;
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-size: 13px;
+}
+
+QDialog {
+    background-color: #F5F9FF;
+}
+
+/* =============================================
+   버튼
+   ============================================= */
+QPushButton {
+    background-color: #93C5FD;
+    color: #1E3A5F;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 70px;
+    min-height: 32px;
+}
+
+QPushButton:hover {
+    background-color: #60A5FA;
+    color: #ffffff;
+}
+
+QPushButton:pressed {
+    background-color: #3B82F6;
+    color: #ffffff;
+}
+
+QPushButton:disabled {
+    background-color: #DBEAFE;
+    color: #93C5FD;
+}
+
+/* 삭제 버튼 */
+QPushButton#deleteButton {
+    background-color: #FBCFE8;
+    color: #9D174D;
+}
+
+QPushButton#deleteButton:hover {
+    background-color: #F9A8D4;
+}
+
+QPushButton#deleteButton:pressed {
+    background-color: #EC4899;
+    color: #ffffff;
+}
+
+QPushButton#deleteButton:disabled {
+    background-color: #FCE7F3;
+    color: #F9A8D4;
+}
+
+/* =============================================
+   입력 필드
+   ============================================= */
+QLineEdit,
+QDateEdit,
+QComboBox {
+    background-color: #ffffff;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #374151;
+    min-height: 32px;
+    selection-background-color: #BFDBFE;
+}
+
+QLineEdit:focus,
+QDateEdit:focus,
+QComboBox:focus {
+    border-color: #60A5FA;
+    background-color: #F0F9FF;
+}
+
+QTextEdit {
+    background-color: #ffffff;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 8px;
+    color: #374151;
+    selection-background-color: #BFDBFE;
+}
+
+QTextEdit:focus {
+    border-color: #60A5FA;
+    background-color: #F0F9FF;
+}
+
+QTextBrowser {
+    background-color: #F0F9FF;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 8px;
+    color: #374151;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+}
+
+QComboBox::down-arrow {
+    width: 12px;
+    height: 12px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 8px;
+    selection-background-color: #DBEAFE;
+    selection-color: #1E3A5F;
+}
+
+QDateEdit::up-button,
+QDateEdit::down-button {
+    border: none;
+    background: transparent;
+}
+
+/* =============================================
+   테이블
+   ============================================= */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 12px;
+    gridline-color: #EFF6FF;
+    outline: none;
+}
+
+QTableWidget::item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #EFF6FF;
+}
+
+QTableWidget::item:selected {
+    background-color: #DBEAFE;
+    color: #1E3A5F;
+}
+
+QTableWidget::item:hover {
+    background-color: #F0F9FF;
+}
+
+QHeaderView::section {
+    background-color: #BFDBFE;
+    color: #1E3A5F;
+    padding: 10px 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+QHeaderView::section:first {
+    border-top-left-radius: 10px;
+}
+
+QHeaderView::section:last {
+    border-top-right-radius: 10px;
+}
+
+/* =============================================
+   리스트
+   ============================================= */
+QListWidget {
+    background-color: #ffffff;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 10px;
+    outline: none;
+    padding: 4px;
+}
+
+QListWidget::item {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 2px 4px;
+    color: #374151;
+}
+
+QListWidget::item:selected {
+    background-color: #DBEAFE;
+    color: #1E3A5F;
+    font-weight: 600;
+}
+
+QListWidget::item:hover:!selected {
+    background-color: #EFF6FF;
+}
+
+/* =============================================
+   스크롤바
+   ============================================= */
+QScrollBar:vertical {
+    background-color: #EFF6FF;
+    width: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #BFDBFE;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #93C5FD;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background-color: #EFF6FF;
+    height: 8px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #BFDBFE;
+    border-radius: 4px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #93C5FD;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+/* =============================================
+   스플리터
+   ============================================= */
+QSplitter::handle {
+    background-color: #BFDBFE;
+    width: 2px;
+    height: 2px;
+}
+
+/* =============================================
+   메시지박스
+   ============================================= */
+QMessageBox {
+    background-color: #F5F9FF;
+}
+
+QMessageBox QPushButton {
+    min-width: 80px;
+}

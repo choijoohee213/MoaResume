@@ -1,34 +1,36 @@
 /* Workspace Sidebar */
 #workspaceSidebar {
-    background-color: #2c3e50;
-    border-right: 1px solid #34495e;
+    background-color: #DBEAFE;
+    border-right: 2px solid #BFDBFE;
 }
 
 /* Sidebar Menu Buttons */
 #menuBtnApplicationList,
 #menuBtnResume {
     background-color: transparent;
-    color: #ecf0f1;
+    color: #374151;
     border: none;
-    padding: 15px 20px;
+    border-radius: 10px;
+    padding: 12px 20px;
     text-align: left;
     font-size: 14px;
     font-weight: 500;
+    margin: 4px 8px;
 }
 
 #menuBtnApplicationList:hover,
 #menuBtnResume:hover {
-    background-color: #34495e;
+    background-color: #BFDBFE;
 }
 
 #menuBtnApplicationList:checked,
 #menuBtnResume:checked {
-    background-color: #3498db;
-    color: white;
-    border-left: 4px solid #2980b9;
+    background-color: #93C5FD;
+    color: #1E3A5F;
+    font-weight: 700;
 }
 
 /* Content Area */
 QStackedWidget {
-    background-color: #ecf0f1;
+    background-color: #EFF6FF;
 }
