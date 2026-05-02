@@ -35,6 +35,22 @@ add_executable(MoaResume
         pkg/applicationList/applicationList.qrc
         pkg/resume/widget/ResumeWidget.cpp
         pkg/resume/widget/ResumeWidget.h
+        pkg/resume/widget/ResumeSidebar.cpp
+        pkg/resume/widget/ResumeSidebar.h
+        pkg/resume/widget/ResumeItemListWidget.cpp
+        pkg/resume/widget/ResumeItemListWidget.h
+        pkg/resume/widget/ResumeItemDialog.cpp
+        pkg/resume/widget/ResumeItemDialog.h
+        pkg/resume/model/ResumeItem.cpp
+        pkg/resume/model/ResumeItem.h
+        pkg/resume/model/ResumeCategory.cpp
+        pkg/resume/model/ResumeCategory.h
+        pkg/resume/service/ResumeService.cpp
+        pkg/resume/service/ResumeService.h
+        pkg/resume/ResumeConstants.h
+        pkg/resume/config/ResumeCategoryConfig.h
+        pkg/resume/config/ResumeCategoryConfig.cpp
+        pkg/resume/resume.qrc
         pkg/applicationList/ApplicationListConstants.h
 )
 
