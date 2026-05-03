@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/common">
         <file>styles/global.qss</file>
+        <file>styles/chevron-down.svg</file>
     </qresource>
 </RCC>

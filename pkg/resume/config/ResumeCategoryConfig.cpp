@@ -14,14 +14,25 @@ QList<FieldDefinition> ResumeCategoryConfig::getFields(CategoryType type) {
             {"portfolio", "포트폴리오 링크", FieldDefinition::Text},
         };
     case CategoryType::Education:
+        // onCopyClicked() 등에서 사용하는 전체 가능 필드 목록
         return {
-            {"school",    "학교명", FieldDefinition::Text, true},
-            {"major",     "전공",   FieldDefinition::Text},
-            {"degree",    "학위",   FieldDefinition::Combo, false,
-                {"고졸", "학사", "석사", "박사", "수료"}},
-            {"startDate", "입학년월", FieldDefinition::Date},
-            {"endDate",   "졸업년월", FieldDefinition::Date},
-            {"gpa",       "학점",     FieldDefinition::Text},
+            {"educationType",    "학력 구분",          FieldDefinition::Combo, true,
+                {"고등학교", "대학교", "대학원"}},
+            {"school",          "학교명",              FieldDefinition::Text, true},
+            {"startDate",       "입학일",              FieldDefinition::Date},
+            {"admissionStatus", "입학 상태",           FieldDefinition::Combo, false,
+                {"일반입학", "편입", "3학년 편입"}},
+            {"endDate",         "졸업(예정)일",        FieldDefinition::Date},
+            {"graduationStatus","졸업 상태",           FieldDefinition::Combo, false,
+                {"졸업", "재학중", "졸업예정", "수료", "중퇴", "휴학"}},
+            {"major",           "전공명",              FieldDefinition::Text},
+            {"minorType",       "부전공/복수전공",     FieldDefinition::Combo, false,
+                {"없음", "부전공", "복수전공"}},
+            {"minorMajor",      "부/복수전공 전공명",  FieldDefinition::Text},
+            {"gpa",             "총학점 평균",         FieldDefinition::Text},
+            {"gpaMax",          "학점 만점",           FieldDefinition::Combo, false,
+                {"4.0", "4.3", "4.5", "100점"}},
+            {"attachmentPath",  "성적증명서",          FieldDefinition::FileAttach},
         };
     case CategoryType::Career:
         return {
@@ -91,9 +102,12 @@ QString ResumeCategoryConfig::getSummary(CategoryType type, const QMap<QString, 
     case CategoryType::BasicInfo:
         return fields.value("name");
     case CategoryType::Education: {
-        QString school = fields.value("school");
-        QString major  = fields.value("major");
-        return major.isEmpty() ? school : QString("%1 · %2").arg(school, major);
+        QString school  = fields.value("school");
+        QString eduType = fields.value("educationType");
+        QString major   = fields.value("major");
+        if (!major.isEmpty())   return QString("%1 · %2").arg(school, major);
+        if (!eduType.isEmpty()) return QString("%1 (%2)").arg(school, eduType);
+        return school;
     }
     case CategoryType::Career: {
         QString company  = fields.value("company");
@@ -128,4 +142,33 @@ QString ResumeCategoryConfig::getSummary(CategoryType type, const QMap<QString, 
         return fields.value("title");
     }
     return {};
+}
+
+QList<FieldDefinition> ResumeCategoryConfig::getEducationFields(const QString &eduType) {
+    QList<FieldDefinition> fields = {
+        {"school",          "학교명",       FieldDefinition::Text, true},
+        {"startDate",       "입학일",       FieldDefinition::Date},
+        {"admissionStatus", "입학 상태",    FieldDefinition::Combo, false,
+            eduType == "고등학교"
+                ? QStringList{"일반입학", "편입"}
+                : QStringList{"일반입학", "편입", "3학년 편입"}},
+        {"endDate",         "졸업(예정)일", FieldDefinition::Date},
+        {"graduationStatus","졸업 상태",    FieldDefinition::Combo, false,
+            eduType == "고등학교"
+                ? QStringList{"졸업", "재학중", "졸업예정", "중퇴", "휴학"}
+                : QStringList{"졸업", "재학중", "졸업예정", "수료", "중퇴", "휴학"}},
+    };
+
+    if (eduType != "고등학교") {
+        fields.append({"major",    "전공명",          FieldDefinition::Text});
+        fields.append({"minorType","부전공/복수전공", FieldDefinition::Combo, false,
+                        QStringList{"없음", "부전공", "복수전공"}});
+        // minorMajor 는 ResumeItemDialog 에서 minorType 선택에 따라 동적으로 처리
+        fields.append({"gpa",      "총학점 평균",     FieldDefinition::Text});
+        fields.append({"gpaMax",   "학점 만점",       FieldDefinition::Combo, false,
+                        QStringList{"4.0", "4.3", "4.5", "100점"}});
+    }
+
+    fields.append({"attachmentPath", "성적증명서", FieldDefinition::FileAttach});
+    return fields;
 }

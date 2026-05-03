@@ -7,7 +7,7 @@
 #include "../ResumeConstants.h"
 
 struct FieldDefinition {
-    enum Type { Text, Date, Combo, Multiline, Markdown };
+    enum Type { Text, Date, Combo, Multiline, Markdown, FileAttach };
 
     QString key;
     QString label;
@@ -23,6 +23,7 @@ struct FieldDefinition {
 class ResumeCategoryConfig {
 public:
     static QList<FieldDefinition> getFields(CategoryType type);
+    static QList<FieldDefinition> getEducationFields(const QString &eduType);
     static QString getSummary(CategoryType type, const QMap<QString, QString> &fields);
 };
 
