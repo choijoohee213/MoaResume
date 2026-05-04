@@ -4,6 +4,33 @@
 #include <QHBoxLayout>
 #include <QFont>
 #include <QFrame>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QDir>
+#include <QFile>
+#include <QStandardPaths>
+#include <QPixmap>
+#include <QPainter>
+#include <QBitmap>
+#include <QDateTime>
+#include <QMouseEvent>
+#include <QCursor>
+
+static QPixmap makeCircularPixmap(const QPixmap &src, int size) {
+    QPixmap scaled = src.scaled(size, size, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    // 중앙 크롭
+    int x = (scaled.width()  - size) / 2;
+    int y = (scaled.height() - size) / 2;
+    scaled = scaled.copy(x, y, size, size);
+
+    QPixmap result(size, size);
+    result.fill(Qt::transparent);
+    QPainter painter(&result);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setClipRegion(QRegion(0, 0, size, size, QRegion::Ellipse));
+    painter.drawPixmap(0, 0, scaled);
+    return result;
+}
 
 BasicInfoWidget::BasicInfoWidget(QWidget *parent)
     : QWidget(parent)
@@ -32,6 +59,44 @@ void BasicInfoWidget::setupUi() {
     divider->setStyleSheet("color: #BFDBFE;");
     mainLayout->addWidget(divider);
 
+    // 사진 영역
+    QHBoxLayout *photoLayout = new QHBoxLayout();
+    photoLayout->setSpacing(16);
+
+    mPhotoLabel = new QLabel(this);
+    mPhotoLabel->setFixedSize(110, 110);
+    mPhotoLabel->setAlignment(Qt::AlignCenter);
+    mPhotoLabel->setCursor(Qt::PointingHandCursor);
+    mPhotoLabel->setToolTip("클릭하여 사진 선택");
+    mPhotoLabel->setStyleSheet(
+        "QLabel {"
+        "  border: 2px dashed #93C5FD;"
+        "  border-radius: 55px;"
+        "  background-color: #EFF6FF;"
+        "  color: #93C5FD;"
+        "  font-size: 11px;"
+        "}"
+        "QLabel:hover {"
+        "  border-color: #60A5FA;"
+        "  background-color: #DBEAFE;"
+        "}"
+    );
+    mPhotoLabel->setText("사진 추가\n클릭");
+    mPhotoLabel->installEventFilter(this);
+
+    QVBoxLayout *photoHint = new QVBoxLayout();
+    QLabel *hintLabel = new QLabel("JPG, PNG 지원\n클릭하여 사진을 선택하세요", this);
+    hintLabel->setStyleSheet("color: #93C5FD; font-size: 12px;");
+    photoHint->addStretch();
+    photoHint->addWidget(hintLabel);
+    photoHint->addStretch();
+
+    photoLayout->addWidget(mPhotoLabel);
+    photoLayout->addLayout(photoHint);
+    photoLayout->addStretch();
+    mainLayout->addLayout(photoLayout);
+
+    // 입력 폼
     QWidget *formContainer = new QWidget(this);
     mFormLayout = new QFormLayout(formContainer);
     mFormLayout->setLabelAlignment(Qt::AlignLeft);
@@ -76,8 +141,33 @@ void BasicInfoWidget::setupUi() {
     setLayout(mainLayout);
 }
 
+bool BasicInfoWidget::eventFilter(QObject *obj, QEvent *event) {
+    if (obj == mPhotoLabel && event->type() == QEvent::MouseButtonRelease) {
+        onPhotoClicked();
+        return true;
+    }
+    return QWidget::eventFilter(obj, event);
+}
+
+void BasicInfoWidget::setPhoto(const QString &path) {
+    if (path.isEmpty()) return;
+    QPixmap px(path);
+    if (px.isNull()) return;
+    mPhotoLabel->setStyleSheet(
+        "QLabel {"
+        "  border: 2px solid #93C5FD;"
+        "  border-radius: 55px;"
+        "  background-color: transparent;"
+        "}"
+        "QLabel:hover {"
+        "  border-color: #60A5FA;"
+        "}"
+    );
+    mPhotoLabel->setPixmap(makeCircularPixmap(px, 110));
+    mPhotoLabel->setText("");
+}
+
 void BasicInfoWidget::loadData() {
-    // BasicInfo 카테고리 찾기
     for (const ResumeCategory &cat : mService.getCategories()) {
         if (cat.getType() == CategoryType::BasicInfo) {
             mCategoryId = cat.getId();
@@ -87,13 +177,11 @@ void BasicInfoWidget::loadData() {
     if (mCategoryId < 0) return;
 
     ResumeCategory cat = mService.getCategoryById(mCategoryId);
-    ResumeItem item;
     if (cat.getItems().isEmpty()) {
-        // 첫 항목 자동 생성
         mService.addItem(mCategoryId, ResumeItem());
-        cat    = mService.getCategoryById(mCategoryId);
+        cat = mService.getCategoryById(mCategoryId);
     }
-    item    = cat.getItems().first();
+    ResumeItem item = cat.getItems().first();
     mItemId = item.getId();
 
     for (const FieldDefinition &field : mFieldDefs) {
@@ -106,17 +194,59 @@ void BasicInfoWidget::loadData() {
             if (date.isValid()) mDateEdits[field.key]->setDate(date);
         }
     }
+
+    mPhotoPath = item.getField("photoPath");
+    setPhoto(mPhotoPath);
 }
 
 void BasicInfoWidget::activate() {
-    // 다른 화면에서 돌아올 때 최신 데이터 재로드
     for (auto it = mLineEdits.begin(); it != mLineEdits.end(); ++it)
         it.value()->clear();
+    mPhotoPath.clear();
+    mPhotoLabel->setPixmap(QPixmap());
+    mPhotoLabel->setText("사진 추가\n클릭");
+    mPhotoLabel->setStyleSheet(
+        "QLabel {"
+        "  border: 2px dashed #93C5FD;"
+        "  border-radius: 55px;"
+        "  background-color: #EFF6FF;"
+        "  color: #93C5FD;"
+        "  font-size: 11px;"
+        "}"
+        "QLabel:hover {"
+        "  border-color: #60A5FA;"
+        "  background-color: #DBEAFE;"
+        "}"
+    );
     loadData();
 }
 
 void BasicInfoWidget::connectSignals() {
     connect(mSaveButton, &QPushButton::clicked, this, &BasicInfoWidget::onSaveClicked);
+}
+
+void BasicInfoWidget::onPhotoClicked() {
+    QString filePath = QFileDialog::getOpenFileName(
+        this, "사진 선택", QString(),
+        "이미지 파일 (*.jpg *.jpeg *.png *.bmp);;모든 파일 (*)");
+    if (filePath.isEmpty()) return;
+
+    QString dataDir   = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString photoDir  = dataDir + "/photos";
+    QDir().mkpath(photoDir);
+
+    QFileInfo fi(filePath);
+    QString destPath = photoDir + "/" + fi.fileName();
+    if (QFile::exists(destPath) && destPath != filePath) {
+        QString ts = QString::number(QDateTime::currentMSecsSinceEpoch());
+        destPath = photoDir + "/" + fi.completeBaseName() + "_" + ts
+                   + (fi.suffix().isEmpty() ? "" : "." + fi.suffix());
+    }
+    if (filePath != destPath)
+        QFile::copy(filePath, destPath);
+
+    mPhotoPath = (filePath != destPath) ? destPath : filePath;
+    setPhoto(mPhotoPath);
 }
 
 void BasicInfoWidget::onSaveClicked() {
@@ -132,6 +262,7 @@ void BasicInfoWidget::onSaveClicked() {
             item.setField(field.key, d.isValid() ? d.toString("yyyy-MM-dd") : "");
         }
     }
+    item.setField("photoPath", mPhotoPath);
 
     if (mItemId < 0) {
         mService.addItem(mCategoryId, item);
