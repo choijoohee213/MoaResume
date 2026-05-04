@@ -25,22 +25,28 @@ private:
     void setupUi();
     void loadData();
     void connectSignals();
-    void setPhoto(const QString &path);
+    void setViewMode(bool viewMode);
+    void setPhoto(const QString &path, bool editable);
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
+    void onEditClicked();
     void onSaveClicked();
+    void onCancelClicked();
     void onPhotoClicked();
 
 private:
-    QLabel      *mTitleLabel;
-    QLabel      *mPhotoLabel;
-    QFormLayout *mFormLayout;
-    QPushButton *mSaveButton;
+    QLabel         *mPhotoLabel;
+    QWidget        *mViewButtons;
+    QWidget        *mEditButtons;
 
     QMap<QString, QLineEdit*> mLineEdits;
     QMap<QString, QDateEdit*> mDateEdits;
     QList<FieldDefinition>    mFieldDefs;
+
+    // 취소 시 복원용
+    QMap<QString, QString> mOriginalFields;
+    QString mOriginalPhotoPath;
 
     QString        mPhotoPath;
     ResumeService &mService;
