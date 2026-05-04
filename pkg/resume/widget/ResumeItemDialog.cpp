@@ -169,7 +169,26 @@ void ResumeItemDialog::addFieldRow(const FieldDefinition &field) {
         edit->setAcceptRichText(false);
         edit->setMinimumHeight(120);
         mTextEdits[field.key] = edit;
-        mFormLayout->addRow(field.label + ":", edit);
+
+        if (mCategoryType == CategoryType::Introduction) {
+            QWidget *wrapper = new QWidget(mFormContainer);
+            QVBoxLayout *vlay = new QVBoxLayout(wrapper);
+            vlay->setContentsMargins(0, 0, 0, 0);
+            vlay->setSpacing(4);
+            QLabel *charCount = new QLabel("0자", wrapper);
+            charCount->setAlignment(Qt::AlignRight);
+            charCount->setStyleSheet("color: #93C5FD; font-size: 12px;");
+            vlay->addWidget(edit);
+            vlay->addWidget(charCount);
+            connect(edit, &QTextEdit::textChanged, [edit, charCount]() {
+                QString text = edit->toPlainText();
+                if (text.endsWith('\n')) text.chop(1);
+                charCount->setText(QString("%1자").arg(text.length()));
+            });
+            mFormLayout->addRow(field.label + ":", wrapper);
+        } else {
+            mFormLayout->addRow(field.label + ":", edit);
+        }
         break;
     }
     case FieldDefinition::FileAttach: {
