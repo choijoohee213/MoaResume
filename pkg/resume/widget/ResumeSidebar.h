@@ -13,6 +13,8 @@ public:
     explicit ResumeSidebar(QWidget *parent = nullptr);
     ~ResumeSidebar() = default;
 
+    void selectFirst();
+
 signals:
     void categorySelected(int categoryId);
 

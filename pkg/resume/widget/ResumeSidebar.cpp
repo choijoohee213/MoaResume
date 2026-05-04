@@ -30,12 +30,13 @@ void ResumeSidebar::loadCategories() {
         item->setData(Qt::UserRole, category.getId());
         mListWidget->addItem(item);
     }
-
-    if (mListWidget->count() > 0) {
+    if (mListWidget->count() > 0)
         mListWidget->setCurrentRow(0);
-        QListWidgetItem *first = mListWidget->item(0);
-        emit categorySelected(first->data(Qt::UserRole).toInt());
-    }
+}
+
+void ResumeSidebar::selectFirst() {
+    if (mListWidget->count() > 0)
+        emit categorySelected(mListWidget->item(0)->data(Qt::UserRole).toInt());
 }
 
 void ResumeSidebar::onItemClicked(QListWidgetItem *item) {

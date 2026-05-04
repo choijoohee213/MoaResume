@@ -3,9 +3,11 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
+#include <QStackedWidget>
 #include <QFile>
 #include "ResumeSidebar.h"
 #include "ResumeItemListWidget.h"
+#include "BasicInfoWidget.h"
 
 class ResumeWidget : public QWidget {
     Q_OBJECT
@@ -19,8 +21,13 @@ private:
     void connectSignals();
     void loadStyles();
 
+private slots:
+    void onCategorySelected(int categoryId);
+
 private:
-    ResumeSidebar *mSidebar;
+    ResumeSidebar        *mSidebar;
+    QStackedWidget       *mStack;
+    BasicInfoWidget      *mBasicInfoWidget;
     ResumeItemListWidget *mItemListWidget;
 };
 

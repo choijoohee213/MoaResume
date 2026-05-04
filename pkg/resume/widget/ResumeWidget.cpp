@@ -1,5 +1,6 @@
 #include "ResumeWidget.h"
 #include "../ResumeConstants.h"
+#include "../service/ResumeService.h"
 
 ResumeWidget::ResumeWidget(QWidget *parent) : QWidget(parent) {
     setupUi();
@@ -13,17 +14,36 @@ void ResumeWidget::setupUi() {
     mainLayout->setSpacing(0);
 
     mSidebar = new ResumeSidebar(this);
-    mItemListWidget = new ResumeItemListWidget(this);
+
+    mStack = new QStackedWidget(this);
+    mBasicInfoWidget = new BasicInfoWidget(mStack);
+    mItemListWidget  = new ResumeItemListWidget(mStack);
+    mStack->addWidget(mBasicInfoWidget); // index 0
+    mStack->addWidget(mItemListWidget);  // index 1
 
     mainLayout->addWidget(mSidebar);
-    mainLayout->addWidget(mItemListWidget, 1);
+    mainLayout->addWidget(mStack, 1);
 
     setLayout(mainLayout);
 }
 
 void ResumeWidget::connectSignals() {
     connect(mSidebar, &ResumeSidebar::categorySelected,
-            mItemListWidget, &ResumeItemListWidget::setCategory);
+            this, &ResumeWidget::onCategorySelected);
+    mSidebar->selectFirst();
+}
+
+void ResumeWidget::onCategorySelected(int categoryId) {
+    ResumeService &service = ResumeService::getInstance();
+    ResumeCategory cat = service.getCategoryById(categoryId);
+
+    if (cat.getType() == CategoryType::BasicInfo) {
+        mBasicInfoWidget->activate();
+        mStack->setCurrentIndex(0);
+    } else {
+        mItemListWidget->setCategory(categoryId);
+        mStack->setCurrentIndex(1);
+    }
 }
 
 void ResumeWidget::loadStyles() {

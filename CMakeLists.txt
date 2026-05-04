@@ -42,6 +42,8 @@ add_executable(MoaResume
         pkg/resume/widget/ResumeItemListWidget.h
         pkg/resume/widget/ResumeItemDialog.cpp
         pkg/resume/widget/ResumeItemDialog.h
+        pkg/resume/widget/BasicInfoWidget.cpp
+        pkg/resume/widget/BasicInfoWidget.h
         pkg/resume/model/ResumeItem.cpp
         pkg/resume/model/ResumeItem.h
         pkg/resume/model/ResumeCategory.cpp
