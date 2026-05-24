@@ -26,12 +26,13 @@ h1 {
 }
 .contact span { margin-right: 14px; }
 h2 {
-    font-size: 11pt;
+    font-size: 13pt;
     font-weight: bold;
     color: #1E3A5F;
-    border-bottom: 1px solid #BFDBFE;
-    padding-bottom: 3px;
-    margin: 18px 0 8px 0;
+    background-color: #EFF6FF;
+    border-left: 4px solid #3B82F6;
+    padding: 5px 10px;
+    margin: 22px 0 10px 0;
 }
 .item { margin-bottom: 10px; }
 .item-header {
@@ -93,14 +94,17 @@ QString ResumeHtmlBuilder::dateRange(const QString &start, const QString &end) {
 QString ResumeHtmlBuilder::build(ResumeService &service) {
     QString html = "<!DOCTYPE HTML><html><head><meta charset=\"UTF-8\">" + CSS + "</head><body>";
 
+    // 기본정보 항상 맨 먼저
     for (const ResumeCategory &cat : service.getCategories()) {
-        if (cat.getItems().isEmpty()) continue;
-
         if (cat.getType() == CategoryType::BasicInfo) {
-            html += buildBasicInfo(cat.getItems().first().getFields());
-            continue;
+            if (!cat.getItems().isEmpty())
+                html += buildBasicInfo(cat.getItems().first().getFields());
+            break;
         }
-
+    }
+    // 나머지 카테고리
+    for (const ResumeCategory &cat : service.getCategories()) {
+        if (cat.getType() == CategoryType::BasicInfo || cat.getItems().isEmpty()) continue;
         html += buildSection(cat.getName(), cat.getItems(), cat.getType());
     }
 
@@ -269,15 +273,12 @@ QString ResumeHtmlBuilder::buildProjectItem(const QMap<QString, QString> &f) {
     QString header = name;
     if (!range.isEmpty()) header += "  <span style='color:#9CA3AF;font-size:9pt;'>" + range + "</span>";
 
-    QString meta;
-    if (!techStack.isEmpty()) meta += "사용기술: " + techStack + "  ";
-    if (!role.isEmpty())      meta += "역할: " + role;
-
     return "<div class='item'>"
            "<div class='item-header'>" + header + "</div>"
-           + (meta.isEmpty()    ? "" : "<div class='item-meta'>"  + meta    + "</div>")
-           + (achieve.isEmpty() ? "" : "<div class='item-desc'>성과: " + achieve + "</div>")
-           + (link.isEmpty()    ? "" : "<div class='item-meta'>링크: "  + link    + "</div>")
+           + (techStack.isEmpty() ? "" : "<div class='item-meta'>사용기술: " + techStack + "</div>")
+           + (role.isEmpty()      ? "" : "<div class='item-meta'>역할: "     + role      + "</div>")
+           + (achieve.isEmpty()   ? "" : "<div class='item-desc'>성과: "     + achieve   + "</div>")
+           + (link.isEmpty()      ? "" : "<div class='item-meta'>링크: "     + link      + "</div>")
            + "</div>";
 }
 
