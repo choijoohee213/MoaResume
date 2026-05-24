@@ -52,9 +52,11 @@ QList<FieldDefinition> ResumeCategoryConfig::getFields(CategoryType type) {
         };
     case CategoryType::Certificate:
         return {
-            {"name",   "자격증명",  FieldDefinition::Text, true},
-            {"issuer", "발급기관",  FieldDefinition::Text},
-            {"date",   "취득일",    FieldDefinition::Date},
+            {"name",   "자격증명",   FieldDefinition::Text, true},
+            {"grade",  "등급",       FieldDefinition::Text},
+            {"number", "자격증 번호", FieldDefinition::Text},
+            {"issuer", "발급기관",   FieldDefinition::Text},
+            {"date",   "취득일",     FieldDefinition::Date},
         };
     case CategoryType::Award:
         return {
