@@ -34,7 +34,7 @@ h2 {
     padding: 5px 10px;
     margin: 22px 0 10px 0;
 }
-.item { margin-bottom: 10px; }
+.item { margin-bottom: 0; }
 .item-header {
     font-weight: bold;
     font-size: 10pt;
@@ -97,8 +97,10 @@ QString ResumeHtmlBuilder::build(ResumeService &service) {
     // 기본정보 항상 맨 먼저
     for (const ResumeCategory &cat : service.getCategories()) {
         if (cat.getType() == CategoryType::BasicInfo) {
+            QMap<QString, QString> f;
             if (!cat.getItems().isEmpty())
-                html += buildBasicInfo(cat.getItems().first().getFields());
+                f = cat.getItems().first().getFields();
+            html += buildBasicInfo(f);
             break;
         }
     }
@@ -116,48 +118,63 @@ QString ResumeHtmlBuilder::buildBasicInfo(const QMap<QString, QString> &f) {
     QString name = esc(field(f, "name"));
     if (name.isEmpty()) name = "(이름 없음)";
 
-    QString contact;
-    auto addContact = [&](const QString &key, const QString &prefix = "") {
-        QString v = field(f, key);
-        if (!v.isEmpty())
-            contact += "<span>" + esc(prefix.isEmpty() ? v : prefix + " " + v) + "</span>";
+    auto row = [&](const QString &label, const QString &key) -> QString {
+        QString v = esc(field(f, key));
+        if (v.isEmpty()) return "";
+        return "<div class='item-meta'><b>" + label + "</b>  " + v + "</div>";
     };
-    addContact("birthDate");
-    addContact("phone");
-    addContact("email");
-    addContact("address");
-    addContact("github",    "GitHub:");
-    addContact("portfolio", "포트폴리오:");
 
-    return QString(
-        "<div id='header'>"
-        "<h1>%1</h1>"
-        "<div class='contact'>%2</div>"
-        "</div>"
-    ).arg(name, contact);
+    QString contact;
+    contact += row("생년월일", "birthDate");
+    contact += row("연락처",   "phone");
+    contact += row("이메일",   "email");
+    contact += row("주소",     "address");
+    contact += row("GitHub",   "github");
+    contact += row("포트폴리오", "portfolio");
+
+    QString photoPath = field(f, "photoPath");
+    QString photoHtml;
+    if (!photoPath.isEmpty()) {
+        QString src = "file:///" + photoPath;
+        photoHtml = "<img src='" + src + "' width='90' height='90' "
+                    "style='border-radius:45px; vertical-align:middle;'>&nbsp;&nbsp;&nbsp;";
+    }
+
+    return "<h2>기본정보</h2>"
+           "<div class='item'>"
+           "<table><tr><td>" + photoHtml + "</td>"
+           "<td valign='middle'>"
+           "<div class='item-header' style='font-size:14pt;'>" + name + "</div>"
+           + contact +
+           "</td></tr></table>"
+           "</div>";
 }
+
+static const QString ITEM_SEP = "<p style='margin:4px 0;'></p>";
 
 QString ResumeHtmlBuilder::buildSection(const QString &title,
                                         const QList<ResumeItem> &items,
                                         CategoryType type) {
-    QString body;
+    QStringList parts;
     for (const ResumeItem &item : items) {
         const QMap<QString, QString> &f = item.getFields();
+        QString part;
         switch (type) {
-        case CategoryType::Education:    body += buildEducationItem(f);    break;
-        case CategoryType::Career:       body += buildCareerItem(f);       break;
-        case CategoryType::Skills:       body += buildSkillsItem(f);       break;
-        case CategoryType::Certificate:  body += buildCertificateItem(f);  break;
-        case CategoryType::Award:        body += buildAwardItem(f);        break;
-        case CategoryType::Project:      body += buildProjectItem(f);      break;
-        case CategoryType::Activity:     body += buildActivityItem(f);     break;
-        case CategoryType::Language:     body += buildLanguageItem(f);     break;
-        case CategoryType::Introduction: body += buildIntroductionItem(f); break;
+        case CategoryType::Education:    part = buildEducationItem(f);    break;
+        case CategoryType::Career:       part = buildCareerItem(f);       break;
+        case CategoryType::Skills:       part = buildSkillsItem(f);       break;
+        case CategoryType::Certificate:  part = buildCertificateItem(f);  break;
+        case CategoryType::Award:        part = buildAwardItem(f);        break;
+        case CategoryType::Project:      part = buildProjectItem(f);      break;
+        case CategoryType::Activity:     part = buildActivityItem(f);     break;
+        case CategoryType::Language:     part = buildLanguageItem(f);     break;
+        case CategoryType::Introduction: part = buildIntroductionItem(f); break;
         default: break;
         }
+        if (!part.isEmpty()) parts.append(part);
     }
-    if (body.isEmpty()) return "";
-    return "<h2>" + esc(title) + "</h2>" + body;
+    if (parts.isEmpty()) return "";
+    return "<h2>" + esc(title) + "</h2>" + parts.join(ITEM_SEP);
 }
 
 QString ResumeHtmlBuilder::buildEducationItem(const QMap<QString, QString> &f) {

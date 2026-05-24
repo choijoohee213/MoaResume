@@ -6,6 +6,8 @@
 #include <QPrinter>
 #include <QPageSize>
 #include <QTextDocument>
+#include <QApplication>
+#include <QProgressDialog>
 
 ResumePreviewDialog::ResumePreviewDialog(QWidget *parent)
     : QDialog(parent) {
@@ -49,14 +51,28 @@ void ResumePreviewDialog::setupUi() {
 }
 
 void ResumePreviewDialog::loadPreview() {
+    mBrowser->setHtml("<p style='color:#9CA3AF; text-align:center; margin-top:40px;'>이력서를 불러오는 중...</p>");
+    QApplication::processEvents();
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     mHtml = ResumeHtmlBuilder::build(ResumeService::getInstance());
     mBrowser->setHtml(mHtml);
+    QApplication::restoreOverrideCursor();
 }
 
 void ResumePreviewDialog::onExportPdf() {
     QString filePath = QFileDialog::getSaveFileName(
         this, "PDF 저장", "이력서.pdf", "PDF 파일 (*.pdf)");
     if (filePath.isEmpty()) return;
+
+    mExportButton->setEnabled(false);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    QProgressDialog progress("PDF를 저장하는 중...", QString(), 0, 0, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(300);
+    progress.show();
+    QApplication::processEvents();
 
     QPrinter printer;
     printer.setOutputFormat(QPrinter::PdfFormat);
@@ -70,6 +86,10 @@ void ResumePreviewDialog::onExportPdf() {
     doc.setPageSize(printer.pageRect(QPrinter::DevicePixel).size());
     doc.setHtml(mHtml);
     doc.print(&printer);
+
+    progress.close();
+    QApplication::restoreOverrideCursor();
+    mExportButton->setEnabled(true);
 
     QMessageBox::information(this, "저장 완료",
         QString("PDF가 저장되었습니다:\n%1").arg(filePath));
