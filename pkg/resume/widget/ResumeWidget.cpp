@@ -1,6 +1,8 @@
 #include "ResumeWidget.h"
 #include "../ResumeConstants.h"
 #include "../service/ResumeService.h"
+#include <QVBoxLayout>
+#include <QPushButton>
 
 ResumeWidget::ResumeWidget(QWidget *parent) : QWidget(parent) {
     setupUi();
@@ -9,22 +11,42 @@ ResumeWidget::ResumeWidget(QWidget *parent) : QWidget(parent) {
 }
 
 void ResumeWidget::setupUi() {
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    QVBoxLayout *outerLayout = new QVBoxLayout(this);
+    outerLayout->setContentsMargins(0, 0, 0, 0);
+    outerLayout->setSpacing(0);
+
+    // 상단 툴바 - 미리보기/PDF 버튼
+    QWidget *toolbar = new QWidget(this);
+    toolbar->setFixedHeight(44);
+    toolbar->setStyleSheet("background-color: #DBEAFE; border-bottom: 1px solid #BFDBFE;");
+    QHBoxLayout *toolbarLayout = new QHBoxLayout(toolbar);
+    toolbarLayout->setContentsMargins(16, 0, 16, 0);
+    QPushButton *previewBtn = new QPushButton("미리보기 / PDF 저장", toolbar);
+    previewBtn->setMinimumSize(150, 30);
+    connect(previewBtn, &QPushButton::clicked, this, &ResumeWidget::onPreviewClicked);
+    toolbarLayout->addStretch();
+    toolbarLayout->addWidget(previewBtn);
+    outerLayout->addWidget(toolbar);
+
+    // 본문 (사이드바 + 콘텐츠)
+    QWidget *body = new QWidget(this);
+    QHBoxLayout *mainLayout = new QHBoxLayout(body);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
 
-    mSidebar = new ResumeSidebar(this);
+    mSidebar = new ResumeSidebar(body);
 
-    mStack = new QStackedWidget(this);
+    mStack = new QStackedWidget(body);
     mBasicInfoWidget = new BasicInfoWidget(mStack);
     mItemListWidget  = new ResumeItemListWidget(mStack);
-    mStack->addWidget(mBasicInfoWidget); // index 0
-    mStack->addWidget(mItemListWidget);  // index 1
+    mStack->addWidget(mBasicInfoWidget);
+    mStack->addWidget(mItemListWidget);
 
     mainLayout->addWidget(mSidebar);
     mainLayout->addWidget(mStack, 1);
+    outerLayout->addWidget(body, 1);
 
-    setLayout(mainLayout);
+    setLayout(outerLayout);
 }
 
 void ResumeWidget::connectSignals() {
@@ -44,6 +66,11 @@ void ResumeWidget::onCategorySelected(int categoryId) {
         mItemListWidget->setCategory(categoryId);
         mStack->setCurrentIndex(1);
     }
+}
+
+void ResumeWidget::onPreviewClicked() {
+    ResumePreviewDialog dialog(this);
+    dialog.exec();
 }
 
 void ResumeWidget::loadStyles() {

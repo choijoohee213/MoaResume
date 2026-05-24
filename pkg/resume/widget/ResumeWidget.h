@@ -8,6 +8,7 @@
 #include "ResumeSidebar.h"
 #include "ResumeItemListWidget.h"
 #include "BasicInfoWidget.h"
+#include "ResumePreviewDialog.h"
 
 class ResumeWidget : public QWidget {
     Q_OBJECT
@@ -23,6 +24,7 @@ private:
 
 private slots:
     void onCategorySelected(int categoryId);
+    void onPreviewClicked();
 
 private:
     ResumeSidebar        *mSidebar;

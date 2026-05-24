@@ -12,6 +12,7 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
+        PrintSupport
         REQUIRED)
 
 add_executable(MoaResume
@@ -44,6 +45,10 @@ add_executable(MoaResume
         pkg/resume/widget/ResumeItemDialog.h
         pkg/resume/widget/BasicInfoWidget.cpp
         pkg/resume/widget/BasicInfoWidget.h
+        pkg/resume/ResumeHtmlBuilder.h
+        pkg/resume/ResumeHtmlBuilder.cpp
+        pkg/resume/widget/ResumePreviewDialog.h
+        pkg/resume/widget/ResumePreviewDialog.cpp
         pkg/resume/model/ResumeItem.cpp
         pkg/resume/model/ResumeItem.h
         pkg/resume/model/ResumeCategory.cpp
@@ -61,5 +66,6 @@ target_link_libraries(MoaResume
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt::PrintSupport
 )
 
