@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QCheckBox>
+#include <QList>
 #include "../service/ResumeService.h"
 
 class ResumePreviewDialog : public QDialog {
@@ -16,15 +18,19 @@ public:
 
 private:
     void setupUi();
-    void loadPreview();
+    void loadCategories();
+    void refreshPreview();
 
 private slots:
     void onExportPdf();
 
 private:
-    QTextBrowser *mBrowser;
-    QPushButton  *mExportButton;
-    QString       mHtml;
+    QTextBrowser      *mBrowser;
+    QPushButton       *mExportButton;
+    QWidget           *mChecklistWidget;
+    QList<QCheckBox*>  mCheckboxes;
+    QList<int>         mCategoryIds;
+    QString            mHtml;
 };
 
 #endif // RESUMEPREVIEWDIALOG_H
