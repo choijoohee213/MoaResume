@@ -1,28 +1,26 @@
-/* Home Widget Styles */
-
-/* Start Button */
 QPushButton#startButton {
-    background-color: #4A90E2;
-    color: white;
+    background-color: #93C5FD;
+    color: #1E3A5F;
     border: none;
-    border-radius: 5px;
+    border-radius: 16px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     min-width: 200px;
-    min-height: 50px;
+    min-height: 54px;
 }
 
 QPushButton#startButton:hover {
-    background-color: #357ABD;
+    background-color: #60A5FA;
+    color: #ffffff;
 }
 
 QPushButton#startButton:pressed {
-    background-color: #2868A8;
+    background-color: #3B82F6;
+    color: #ffffff;
 }
 
-/* Title Label */
 QLabel#titleLabel {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333333;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1E3A5F;
 }

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/resume">
+        <file>styles/resume.qss</file>
+    </qresource>
+</RCC>

@@ -1,66 +1,24 @@
-QPushButton#addButton,
-QPushButton#editButton,
+/* applicationList 전용 오버라이드 */
+QPushButton#addButton {
+    background-color: #93C5FD;
+    color: #1E3A5F;
+}
+
+QPushButton#addButton:hover {
+    background-color: #60A5FA;
+    color: #ffffff;
+}
+
 QPushButton#deleteButton {
-    background-color: #4A90E2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 80px;
+    background-color: #FBCFE8;
+    color: #9D174D;
 }
 
-QPushButton#addButton:hover,
-QPushButton#editButton:hover,
 QPushButton#deleteButton:hover {
-    background-color: #357ABD;
+    background-color: #F9A8D4;
 }
 
-QPushButton#addButton:pressed,
-QPushButton#editButton:pressed,
-QPushButton#deleteButton:pressed {
-    background-color: #2868A8;
-}
-
-QPushButton#editButton:disabled,
 QPushButton#deleteButton:disabled {
-    background-color: #B0BEC5;
-    color: #78909C;
-}
-
-QPushButton#deleteButton {
-    background-color: #E74C3C;
-}
-
-QPushButton#deleteButton:hover {
-    background-color: #C0392B;
-}
-
-QPushButton#deleteButton:pressed {
-    background-color: #A93226;
-}
-
-QTableWidget {
-    background-color: white;
-    border: 1px solid #BDC3C7;
-    border-radius: 4px;
-    gridline-color: #ECF0F1;
-}
-
-QTableWidget::item {
-    padding: 8px;
-}
-
-QTableWidget::item:selected {
-    background-color: #3498DB;
-    color: white;
-}
-
-QHeaderView::section {
-    background-color: #34495E;
-    color: white;
-    padding: 10px;
-    border: none;
-    font-weight: bold;
+    background-color: #FCE7F3;
+    color: #F9A8D4;
 }
