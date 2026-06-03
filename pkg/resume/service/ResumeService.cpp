@@ -75,6 +75,18 @@ bool ResumeService::updateItem(int categoryId, const ResumeItem &item) {
     return false;
 }
 
+bool ResumeService::reorderItems(int categoryId, const QList<int> &orderedItemIds) {
+    for (int i = 0; i < mCategories.size(); ++i) {
+        if (mCategories[i].getId() == categoryId) {
+            mCategories[i].reorderItems(orderedItemIds);
+            bool saved = save();
+            if (saved) emit dataChanged(categoryId);
+            return saved;
+        }
+    }
+    return false;
+}
+
 bool ResumeService::deleteItem(int categoryId, int itemId) {
     for (int i = 0; i < mCategories.size(); ++i) {
         if (mCategories[i].getId() == categoryId) {

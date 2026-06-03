@@ -26,6 +26,19 @@ void ResumeCategory::removeItem(int itemId) {
     }
 }
 
+void ResumeCategory::reorderItems(const QList<int> &orderedItemIds) {
+    QList<ResumeItem> newOrder;
+    for (int id : orderedItemIds) {
+        for (const ResumeItem &item : mItems) {
+            if (item.getId() == id) {
+                newOrder.append(item);
+                break;
+            }
+        }
+    }
+    mItems = newOrder;
+}
+
 ResumeItem ResumeCategory::getItemById(int itemId) const {
     for (const ResumeItem &item : mItems) {
         if (item.getId() == itemId) return item;

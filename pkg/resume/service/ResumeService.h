@@ -17,6 +17,7 @@ public:
     bool addItem(int categoryId, const ResumeItem &item);
     bool updateItem(int categoryId, const ResumeItem &item);
     bool deleteItem(int categoryId, int itemId);
+    bool reorderItems(int categoryId, const QList<int> &orderedItemIds);
 
     bool save();
     bool load();

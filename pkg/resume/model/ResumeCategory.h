@@ -25,6 +25,7 @@ public:
     void addItem(const ResumeItem &item) { mItems.append(item); }
     void updateItem(const ResumeItem &item);
     void removeItem(int itemId);
+    void reorderItems(const QList<int> &orderedItemIds);
     ResumeItem getItemById(int itemId) const;
 
     int takeNextItemId() { return mNextItemId++; }

@@ -47,6 +47,11 @@ void ResumeItemListWidget::setupUi() {
     mListWidget = new QListWidget(this);
     mListWidget->setAlternatingRowColors(true);
     mListWidget->setSpacing(2);
+    mListWidget->setDragEnabled(true);
+    mListWidget->setAcceptDrops(true);
+    mListWidget->setDropIndicatorShown(true);
+    mListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+    mListWidget->setDefaultDropAction(Qt::MoveAction);
 
     mainLayout->addWidget(mCategoryLabel);
     mainLayout->addLayout(toolbarLayout);
@@ -62,6 +67,8 @@ void ResumeItemListWidget::connectSignals() {
     connect(mListWidget,   &QListWidget::itemSelectionChanged, this, &ResumeItemListWidget::onSelectionChanged);
     connect(mListWidget,   &QListWidget::itemDoubleClicked, this, &ResumeItemListWidget::onItemDoubleClicked);
     connect(&mService,     &ResumeService::dataChanged, this, &ResumeItemListWidget::onDataChanged);
+    connect(mListWidget->model(), &QAbstractItemModel::rowsMoved,
+            this, &ResumeItemListWidget::onItemsReordered);
 }
 
 void ResumeItemListWidget::setCategory(int categoryId) {
@@ -148,6 +155,14 @@ void ResumeItemListWidget::onSelectionChanged() {
 
 void ResumeItemListWidget::onDataChanged(int categoryId) {
     if (categoryId == mCurrentCategoryId) loadItems();
+}
+
+void ResumeItemListWidget::onItemsReordered() {
+    if (mCurrentCategoryId < 0) return;
+    QList<int> newOrder;
+    for (int i = 0; i < mListWidget->count(); ++i)
+        newOrder.append(mListWidget->item(i)->data(Qt::UserRole).toInt());
+    mService.reorderItems(mCurrentCategoryId, newOrder);
 }
 
 void ResumeItemListWidget::onItemDoubleClicked(QListWidgetItem *listItem) {

@@ -33,6 +33,7 @@ private slots:
     void onSelectionChanged();
     void onDataChanged(int categoryId);
     void onItemDoubleClicked(QListWidgetItem *listItem);
+    void onItemsReordered();
 
 private:
     int mCurrentCategoryId;
