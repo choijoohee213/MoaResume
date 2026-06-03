@@ -9,6 +9,7 @@
 #include <QScrollArea>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QComboBox>
 #include <QMap>
 #include "../service/ResumeService.h"
 #include "../config/ResumeCategoryConfig.h"
@@ -34,6 +35,8 @@ private slots:
     void onSaveClicked();
     void onCancelClicked();
     void onPhotoClicked();
+    void onPortfolioTypeChanged(const QString &type);
+    void onPortfolioFileClicked();
 
 private:
     QLabel         *mPhotoLabel;
@@ -43,6 +46,21 @@ private:
     QMap<QString, QLineEdit*> mLineEdits;
     QMap<QString, QDateEdit*> mDateEdits;
     QList<FieldDefinition>    mFieldDefs;
+
+    // GitHub
+    QLabel      *mGithubLinkLabel;
+
+    // Portfolio
+    QComboBox   *mPortfolioTypeCombo;
+    QLineEdit   *mPortfolioUrlEdit;
+    QWidget     *mPortfolioFileWidget;
+    QPushButton *mPortfolioFileBtn;
+    QLabel      *mPortfolioFileNameLabel;
+    QLabel      *mPortfolioLinkLabel;
+    QPushButton *mPortfolioOpenFileBtn;
+    QString      mPortfolioFilePath;
+    QString      mOriginalPortfolioFilePath;
+    QString      mOriginalPortfolioType;
 
     // 취소 시 복원용
     QMap<QString, QString> mOriginalFields;

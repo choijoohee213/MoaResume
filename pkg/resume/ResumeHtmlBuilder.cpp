@@ -1,4 +1,5 @@
 #include "ResumeHtmlBuilder.h"
+#include <QFileInfo>
 
 static const QString CSS = R"(
 <style>
@@ -124,13 +125,32 @@ QString ResumeHtmlBuilder::buildBasicInfo(const QMap<QString, QString> &f) {
         return "<div class='item-meta'><b>" + label + "</b>  " + v + "</div>";
     };
 
+    auto linkRow = [&](const QString &label, const QString &url) -> QString {
+        if (url.isEmpty()) return "";
+        QString escaped = esc(url);
+        QString href = url.startsWith("http") ? escaped : "https://" + escaped;
+        return "<div class='item-meta'><b>" + label + "</b>  "
+               "<a href='" + href + "' style='color:#3B82F6;'>" + escaped + "</a></div>";
+    };
+
     QString contact;
     contact += row("생년월일", "birthDate");
     contact += row("연락처",   "phone");
     contact += row("이메일",   "email");
     contact += row("주소",     "address");
-    contact += row("GitHub",   "github");
-    contact += row("포트폴리오", "portfolio");
+    contact += linkRow("GitHub", field(f, "github"));
+
+    // 포트폴리오: 링크 또는 파일
+    QString portfolioType = field(f, "portfolioType");
+    if (portfolioType == "파일") {
+        QString filePath = field(f, "portfolioFile");
+        if (!filePath.isEmpty()) {
+            QString fileName = esc(QFileInfo(filePath).fileName());
+            contact += "<div class='item-meta'><b>포트폴리오</b>  " + fileName + " (첨부파일)</div>";
+        }
+    } else {
+        contact += linkRow("포트폴리오", field(f, "portfolio"));
+    }
 
     QString photoPath = field(f, "photoPath");
     QString photoHtml;

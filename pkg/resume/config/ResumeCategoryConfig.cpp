@@ -5,13 +5,15 @@ QList<FieldDefinition> ResumeCategoryConfig::getFields(CategoryType type) {
     switch (type) {
     case CategoryType::BasicInfo:
         return {
-            {"name",      "이름",           FieldDefinition::Text, true},
-            {"birthDate", "생년월일",        FieldDefinition::Date},
-            {"phone",     "연락처",          FieldDefinition::Text},
-            {"email",     "이메일",          FieldDefinition::Text},
-            {"address",   "주소",            FieldDefinition::Text},
-            {"github",    "GitHub",          FieldDefinition::Text},
-            {"portfolio", "포트폴리오 링크", FieldDefinition::Text},
+            {"name",          "이름",            FieldDefinition::Text, true},
+            {"birthDate",     "생년월일",         FieldDefinition::Date},
+            {"phone",         "연락처",           FieldDefinition::Text},
+            {"email",         "이메일",           FieldDefinition::Text},
+            {"address",       "주소",             FieldDefinition::Text},
+            {"github",        "GitHub",           FieldDefinition::Text},
+            {"portfolioType", "포트폴리오 유형",   FieldDefinition::Combo, false, {"링크", "파일"}},
+            {"portfolio",     "포트폴리오 URL",    FieldDefinition::Text},
+            {"portfolioFile", "포트폴리오 파일",   FieldDefinition::FileAttach},
         };
     case CategoryType::Education:
         // onCopyClicked() 등에서 사용하는 전체 가능 필드 목록
