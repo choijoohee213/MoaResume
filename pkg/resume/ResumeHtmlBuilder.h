@@ -3,11 +3,13 @@
 
 #include <QString>
 #include <QMap>
+#include <QSet>
 #include "service/ResumeService.h"
 
 class ResumeHtmlBuilder {
 public:
-    static QString build(ResumeService &service);
+    static QString build(ResumeService &service,
+                         const QSet<int> &includedIds = QSet<int>());
 
 private:
     static QString buildBasicInfo(const QMap<QString, QString> &f);

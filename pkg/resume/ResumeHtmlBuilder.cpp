@@ -92,22 +92,29 @@ QString ResumeHtmlBuilder::dateRange(const QString &start, const QString &end) {
     return start + " ~ " + end;
 }
 
-QString ResumeHtmlBuilder::build(ResumeService &service) {
+QString ResumeHtmlBuilder::build(ResumeService &service, const QSet<int> &includedIds) {
+    auto included = [&](const ResumeCategory &cat) {
+        return includedIds.isEmpty() || includedIds.contains(cat.getId());
+    };
+
     QString html = "<!DOCTYPE HTML><html><head><meta charset=\"UTF-8\">" + CSS + "</head><body>";
 
     // 기본정보 항상 맨 먼저
     for (const ResumeCategory &cat : service.getCategories()) {
         if (cat.getType() == CategoryType::BasicInfo) {
-            QMap<QString, QString> f;
-            if (!cat.getItems().isEmpty())
-                f = cat.getItems().first().getFields();
-            html += buildBasicInfo(f);
+            if (included(cat)) {
+                QMap<QString, QString> f;
+                if (!cat.getItems().isEmpty())
+                    f = cat.getItems().first().getFields();
+                html += buildBasicInfo(f);
+            }
             break;
         }
     }
     // 나머지 카테고리
     for (const ResumeCategory &cat : service.getCategories()) {
         if (cat.getType() == CategoryType::BasicInfo || cat.getItems().isEmpty()) continue;
+        if (!included(cat)) continue;
         html += buildSection(cat.getName(), cat.getItems(), cat.getType());
     }
 
