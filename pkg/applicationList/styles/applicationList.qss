@@ -1,0 +1,24 @@
+/* applicationList 전용 오버라이드 */
+QPushButton#addButton {
+    background-color: #93C5FD;
+    color: #1E3A5F;
+}
+
+QPushButton#addButton:hover {
+    background-color: #60A5FA;
+    color: #ffffff;
+}
+
+QPushButton#deleteButton {
+    background-color: #FBCFE8;
+    color: #9D174D;
+}
+
+QPushButton#deleteButton:hover {
+    background-color: #F9A8D4;
+}
+
+QPushButton#deleteButton:disabled {
+    background-color: #FCE7F3;
+    color: #F9A8D4;
+}

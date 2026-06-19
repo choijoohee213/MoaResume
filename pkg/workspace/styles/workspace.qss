@@ -1,0 +1,36 @@
+/* Workspace Sidebar */
+#workspaceSidebar {
+    background-color: #DBEAFE;
+    border-right: 2px solid #BFDBFE;
+}
+
+/* Sidebar Menu Buttons */
+#menuBtnApplicationList,
+#menuBtnResume {
+    background-color: transparent;
+    color: #374151;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 4px 8px;
+}
+
+#menuBtnApplicationList:hover,
+#menuBtnResume:hover {
+    background-color: #BFDBFE;
+}
+
+#menuBtnApplicationList:checked,
+#menuBtnResume:checked {
+    background-color: #93C5FD;
+    color: #1E3A5F;
+    font-weight: 700;
+}
+
+/* Content Area */
+QStackedWidget {
+    background-color: #EFF6FF;
+}

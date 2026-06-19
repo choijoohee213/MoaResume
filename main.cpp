@@ -1,10 +1,18 @@
+#include "ui/MainWindow.h"
 #include <QApplication>
-#include <QPushButton>
+#include <QFile>
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
-    QPushButton button("Hello MoaResume!", nullptr);
-    button.resize(200, 100);
-    button.show();
-    return QApplication::exec();
+    QApplication app(argc, argv);
+
+    QFile styleFile(":/common/styles/global.qss");
+    if (styleFile.open(QFile::ReadOnly)) {
+        app.setStyleSheet(QLatin1String(styleFile.readAll()));
+        styleFile.close();
+    }
+
+    MainWindow mainWindow;
+    mainWindow.show();
+
+    return app.exec();
 }
